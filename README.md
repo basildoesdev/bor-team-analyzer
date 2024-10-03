@@ -1,8 +1,8 @@
 # BoRteamAnalyzer
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/cdb0198e-df4a-4918-959d-421f664b4d77/deploy-status)](https://app.netlify.com/sites/basilboranalyzer/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/059c03a9-add5-41e9-9c40-9aec21ffc412/deploy-status)](https://app.netlify.com/sites/borteamanalyzer/deploys)
 
-## Try it out [here](https://basilboranalyzer.netlify.app/)
+## Try it out [here](https://borteamanalyzer.netlify.app/)
 
 ## Requirements : 
 
