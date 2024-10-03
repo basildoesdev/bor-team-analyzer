@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./images/leaf.png" type="image/x-icon">
+    <title id="team1">Basil | BoR Team Analyzer</title>
+    <link rel="stylesheet" href="variables.css">
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="tab-dropdown.css">
+</head>
+<body>
+    <div id="team-analyzer-form">
+        <h2> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer</h2>
+        <div class="input-container">
+            <label id="key-valid-display" for="access-key">Access Key:</label>
+            <input type="text" id="access-key" name="access-key" placeholder="🗝️" oninput="checkKeyInput()" required>
+        </div>
+        <div class="input-container">
+            <p class="key-info">* find this on your account page > <a href="https://www.blackoutrugby.com/game/me.account.php#page=account" target="_blank">here</a></p>
+        </div>
+        <div class="input-container">
+            <label>
+                <input type="checkbox" id="save-key" name="save-key"> Save key to localstore
+            </label>
+        </div>
+        <button id="submit" disabled>Submit</button>
+    </div>
+    <p id="information"></p>
+    <div id="info-container" class="container">
+        <div id="version"></div>
+        <h2 style="text-align:center;"> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer: </h2>
+
+        <nav class="tab-nav">
+            <button id="tab-1-btn" class="tab-btn" onclick="showTab(1)">Tab 1</button>
+            <button id="tab-2-btn" class="tab-btn active" onclick="showTab(2)">Tab 2</button>
+            <button id="tab-3-btn" class="tab-btn" onclick="showTab(3)">Tab 3</button>
+            <button id="tab-4-btn" class="tab-btn" onclick="showTab(4)">Tab 4</button>
+            <button id="tab-5-btn" class="tab-btn" onclick="showTab(5)">Tab 5</button>
+        </nav>
+        <!-- Dropdown for smaller screens -->
+        <select id="tab-dropdown" class="tab-dropdown" onchange="showTabDropdown(this.value)">
+            <option id="option1" value="1">Tab 1</option>
+            <option id="option2" value="2">Tab 2</option>
+            <option id="option3" value="3">Tab 3</option>
+            <option id="option4" value="4">Tab 4</option>
+            <option id="option5" value="5">Tab 5</option>
+        </select>
+
+        <div id="tab1" class="tab-content">
+            <p id="manager-infos"></p>
+        </div>
+        <div id="tab2" class="tab-content active">
+            <p id="club-infos"></p>
+        </div>
+        <div id="tab3" class="tab-content">
+            <p id="averages"></p>
+            <nav id="sort-list-display"></nav>
+            <p id="player-card-container"></p>
+        </div>
+        <div id="tab4" class="tab-content">
+            
+                <div id="lineup-infos"></div>
+            
+            
+        </div>
+        <div id="tab5" class="tab-content">
+            <p id="settings-infos"></p>
+        </div>
+    </div>
+
+</body>
+<script src="scripts.js"></script>
+
+</html>
