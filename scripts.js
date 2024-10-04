@@ -1,4 +1,4 @@
-const version = 0.64;
+const version = 0.65;
 const versionDisplay = document.getElementById('version');
 const infoDisplay = document.getElementById('information');
 const dataDisplay = document.getElementById('player-card-container');
@@ -14,12 +14,10 @@ const tab1Name = document.getElementById('tab-1-btn');
 const tab2Name = document.getElementById('tab-2-btn');
 const tab3Name = document.getElementById('tab-3-btn');
 const tab4Name = document.getElementById('tab-4-btn');
-const tab5Name = document.getElementById('tab-5-btn');
 const option1Name = document.getElementById('option1');
 const option2Name = document.getElementById('option2');
 const option3Name = document.getElementById('option3');
 const option4Name = document.getElementById('option4');
-const option5Name = document.getElementById('option5');
 const managerInfo = document.getElementById('manager-infos');
 const clubInfo = document.getElementById('club-infos');
 // const lineupInfo = document.getElementById('lineup-infos');
@@ -321,7 +319,6 @@ function logClubData() {
     const managerName = `<h3>Manager: ${username} ${isPremium ? "⭐" : ""}</h3>`;
     const clubName = `<h3>Club: ${name} <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/></h3>`;
     const squadCount = `<h3>Squad (${playersCount})</h3>`;
-    const lineupLabel = `<h3>Lineup</h3>`;
     const settingsLabel = `<h3>🔧 Settings</h3>`;
 
     const applyContent = (element, content) => {
@@ -331,14 +328,12 @@ function logClubData() {
     applyContent(tab1Name, managerName);
     applyContent(tab2Name, clubName);
     applyContent(tab3Name, squadCount);
-    applyContent(tab4Name, lineupLabel);
-    applyContent(tab5Name, settingsLabel);
+    applyContent(tab4Name, settingsLabel);
 
     applyContent(option1Name, managerName);
     applyContent(option2Name, clubName);
     applyContent(option3Name, squadCount);
-    applyContent(option4Name, lineupLabel);
-    applyContent(option5Name, settingsLabel);
+    applyContent(option4Name, settingsLabel);
 }
 
 function logTeamData() {
