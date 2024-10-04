@@ -1,4 +1,4 @@
-const version = 0.65;
+const version = 0.70;
 const versionDisplay = document.getElementById('version');
 const infoDisplay = document.getElementById('information');
 const dataDisplay = document.getElementById('player-card-container');
@@ -23,90 +23,198 @@ const clubInfo = document.getElementById('club-infos');
 // const lineupInfo = document.getElementById('lineup-infos');
 const settingsInfo = document.getElementById('settings-infos');
 
-const corsProxy = 'https://corsproxy.io/?';
-const apiUriBase = 'https://classic-api.blackoutrugby.com/?d=1038&dk=2yysSrd2fZxuOu5y&';
 
-let PLAYERS_DATA = [], CLUB_DATA = [], MEMBER_DATA = [];
+let PLAYER_DATA = [], CLUB_DATA = [], MEMBER_DATA = [];
+let PLAYER_STATISTICS_DATA = []
+let LAST_FIXTURE_DATA = []
+let _globals = { season: '', round: '', day: '',};
+let _mainKey, _memberid, _teamid;
+
+
 let isPremium = false;
 let refresh;
-let _accessKey;
-let member_id;
+
 
 
 submitBtn.addEventListener('click', () => {
     isSaveKey.checked ? localStorage.setItem('key', accessKey.value): " ";
-    initApiCalls(true);
+    // initApiCalls(true);
 });
 
 window.onload = function(){
-    localStorage.getItem('key') ? initApiCalls(true) : " ";
+    if (localStorage.getItem('key')){
+        _mainKey = localStorage.getItem('key').slice(-40)
+        retrieveData(true)
+    }
+
+    // localStorage.getItem('key') ? retrieveData(true) : " ";
 }
 
 function devDataLogs(){
     console.log('Player Data');
-    console.log(PLAYERS_DATA);
+    console.log(PLAYER_DATA);
     console.log('Club Data');
     console.log(CLUB_DATA);
     console.log('Member Data');
     console.log(MEMBER_DATA);
 }
 
-function isKeyValid(key){
-    const regex = /^m=\d+&mk=[a-f0-9]{40}$/i;
-    return regex.test(key);
-}
-
 function checkKeyInput(){
-    if(isKeyValid(accessKey.value)){
+    const isValidKey = /^m=(\d+)&mk=([a-fA-F0-9]{40})$/;
+    let fullkey = document.getElementById('access-key').value;
+    if(isValidKey.test(fullkey)){
+        _mainKey = fullkey.slice(-40);
+        _memberid = trimkey(fullkey)
+        // console.log('Member ID: ' + _memberid);
         accessKey.style.color = 'green';
         submitBtn.style.backgroundColor = '#e73d3d';
         submitBtn.disabled = false;
         keyValidDisplay.innerHTML ='<p>Access Key:<span class="green"> (Valid Key Format) </span></p>';
-    }else{
+        // retrieveData();
+    } else {
         accessKey.style.color = 'red';
         submitBtn.style.backgroundColor = '#a39999';
         submitBtn.disabled = true;
         keyValidDisplay.innerHTML = '<p>Access Key:<span class="red"> (Invalid Key Format) </span></p>';
+        // console.log('Unvalid Key')
     }
+    
 }
 
-async function initApiCalls(initcall){
-    
-    form.style.display = 'none';
+function trimkey(key){
+    let trimmed = key.split('=')[1].split('&')[0]
+    return trimmed
+}
 
+function fetchRugbyData(request_type, additionalParams = {}) {
+    const url = 'https://corsproxy.io/?https://classic-api.blackoutrugby.com/?d=1038';
+    // console.log(`${typeof(_mainKey)} | ${_mainKey}`)
+    const mailparams = {
+        d: 1038,
+        dk: '2yysSrd2fZxuOu5y',
+        r: request_type,
+        m: _memberid,
+        mk: _mainKey,
+        json: 1,
+        ...additionalParams
+    };
+    
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+        },
+        body: new URLSearchParams(mailparams)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'Ok') {
+            return data;  // Return data if the request is successful
+        } else {
+            // return data;
+            throw new Error(data.error || 'Unknown error occurred');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error); badKeyDay();
+        throw error;  // Re-throw the error to handle it in the caller
+    });
+}
+
+// Example usage
+function retrieveData(initcall){
+    
     if (initcall){
-       
-        accessKey.value ? _accessKey = accessKey.value : _accessKey = localStorage.getItem('key');
-        // console.log(_accessKey)
-        accessKey.value = '';
-        member_id = _accessKey.split('=')[1].split('&')[0];
+        let localKey = localStorage.getItem('key');
+        _memberid = trimkey(localKey);
     }
-    
-    const url_member = corsProxy + encodeURIComponent(`${apiUriBase}r=m&memberid=${member_id}&${_accessKey}&json=1&timestamp=${new Date().getTime()}`);
-    await collectData(url_member, 'member');
-    // console.log(`${apiUriBase}r=m&memberid=${member_id}&${_accessKey}&json=1&timestamp=${new Date().getTime()}`);
-    let team_id = MEMBER_DATA[0].teamid;
-    MEMBER_DATA[0].premium == '1' ? isPremium = true : isPremium = false;
-    const url_players = corsProxy + encodeURIComponent(`${apiUriBase}r=p&teamid=${team_id}&${_accessKey}&json=1&timestamp=${new Date().getTime()}`);
-    const url_club = corsProxy + encodeURIComponent(`${apiUriBase}r=t&teamid=${team_id}&${_accessKey}&json=1&timestamp=${new Date().getTime()}`);
 
-    await collectData(url_players, 'players');
-    await collectData(url_club, 'club');
+    form.style.display = 'none';
+    infoDisplay.innerHTML = `<h3 style="margin-top:20px;"> Requesting...</h3>`;
 
-//    devDataLogs();
-    displayClubandManagerInfo();
+    (async () => {
+        try {
+            // First fetch for 'm'
+            // console.log(typeof(_memberid) + " | " + _memberid)
+            const memberData = await fetchRugbyData('m', {memberid: _memberid,});
+            // console.log('Fetched member data:', memberData);
+            MEMBER_DATA = Object.values(memberData.members);
+            
+            _teamid = MEMBER_DATA[0].teamid;
+
+            _globals.day = memberData.gameDate.day;
+            _globals.round = memberData.gameDate.round;
+            _globals.season = memberData.gameDate.season;
+
+            document.getElementById('game-date').innerHTML = `
+            Round: ${_globals.round}, 
+            Day: ${_globals.day}, 
+            Season: ${_globals.season}`;
+            // console.log(_globals.season)
+
+            // Assuming MEMBER_DATA is populated
+            // console.log(MEMBER_DATA[0].teamid);
+            
+            // Second fetch for 't', using data from the first fetch
+            const clubData = await fetchRugbyData('t', { teamid: _teamid });
+            // console.log('Fetched club data:', clubData);
+            CLUB_DATA = Object.values(clubData.teams);
+            
+            // Assuming PLAYER_DATA is populated
+            // console.log(CLUB_DATA[0].name);
+            
+            // Second fetch for 'p', using data from the first fetch
+            const playerData = await fetchRugbyData('p', { teamid: _teamid });
+            // console.log('Fetched player data:', playerData);
+            PLAYER_DATA =  Object.values(playerData.players).sort((a, b) => b.csr - a.csr);
+            
+            // Assuming PLAYER_DATA is populated
+            // console.log(PLAYER_DATA[0].name);
+
+            // Second fetch for 'p', using data from the first fetch
+            const playerStatisticsData = await fetchRugbyData('ps', {playerid: (playerstatisticshelper(PLAYER_DATA))});
+            // console.log('Fetched player stats data:', playerStatisticsData );
+            PLAYER_STATISTICS_DATA = Object.values(playerStatisticsData['player statistics']);
+            
+            // Assuming PLAYER_DATA is populated
+            // console.log(PLAYER_STATISTICS_DATA);
+
+             // Second fetch for 'p', using data from the first fetch
+             const lastFixtureData = await fetchRugbyData('f', {teamid: _teamid, last: 4});
+            //  console.log('Fetched player stats data:', lastFixtureData );
+            //  PLAYER_STATISTICS_DATA = Object.values(lastFixtureData['player statistics']);
+             
+             // Assuming PLAYER_DATA is populated
+            //  console.log(lastFixtureData);
+            // const maildata = await fetchRugbyData('ma', {to: [ "yaya",] , "subject": "hello", "body":["world"],})
+             // UI update calls
+            // populateTabs();
+            logTeamData();
+            displayClubandManagerInfo();
+            logClubData();
+
+            infoDisplay.innerHTML = '';
+
+            
+        } catch (error) {
+            console.error('Error during fetch operations:', error);
+        }
+    })();
 }
+// Fetch using a different type with additional params
 
-async function fetchData(apiUrl) {
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Network response was not ok'); badKeyDay()
-        return await response.json();
-    } catch (error) {
-        console.error(`Error: ${error}`);
-        return null;
-    }
-}
+function playerstatisticshelper(playerData){
+    let playerIdString = '';
+    playerData.forEach(element => {
+        playerIdString += element.id + ',';
+        
+    });
+    playerIdString = playerIdString.slice(0, -1);
+    // console.log(playerIdString)
+    return playerIdString
+};
+
 
 function badKeyDay(){
     infoDisplay.innerHTML += "<h3 class='red'> Bad Key .. 😢</h3><button id='reload'> Reload </button>";
@@ -117,25 +225,6 @@ function badKeyDay(){
         localStorage.clear();
         location.reload(true);
     })
-}
-
-async function collectData(requestUrl, dataType) {
-    infoDisplay.innerHTML = `<h3 style="margin-top:20px;"> Requesting...</h3>`;
-    const data = await fetchData(requestUrl);
-    // console.log(data.status)
-    
-    if (dataType === 'players') PLAYERS_DATA = Object.values(data.players).sort((a, b) => b.csr - a.csr);
-    else if (dataType === 'club') CLUB_DATA = Object.values(data.teams);
-    else if (dataType === 'member')  MEMBER_DATA = Object.values(data.members);
-  
-    handleDataOutput(dataType);
-    infoDisplay.innerHTML = '';
-    return data;  // Return fetched data for future usage
-}
-
-function handleDataOutput(dataType) {
-    if (dataType === 'players') logTeamData();
-    else if (dataType === 'club') logClubData();
 }
 
 const positionWeights = {
@@ -309,12 +398,12 @@ function logClubData() {
     refresh.addEventListener('click', () => {
         dataDisplay.innerHTML = '';
         dataDisplayAvg.innerHTML = '';
-        initApiCalls(false);
+        retrieveData(false);
     });
 
     const [{ username }] = MEMBER_DATA;
     const [{ name, country_iso }] = CLUB_DATA;
-    const playersCount = PLAYERS_DATA.length;
+    const playersCount = PLAYER_DATA.length;
 
     const managerName = `<h3>Manager: ${username} ${isPremium ? "⭐" : ""}</h3>`;
     const clubName = `<h3>Club: ${name} <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/></h3>`;
@@ -341,8 +430,8 @@ function logTeamData() {
     dataDisplayAvg.innerHTML = '';
     let totalFrom = 0, totalEnergy = 0, totalKG = 0, totalCM = 0, csr = 0, age = 0, agro = 0, disc = 0, injury = 0;
     let stam = 0, att = 0, tech = 0, jump = 0, agi = 0, hand = 0, def = 0, str = 0, spee = 0, kick = 0;
-    console.log(PLAYERS_DATA);
-    PLAYERS_DATA.forEach((element, i) => {
+    // console.log(PLAYER_DATA);
+    PLAYER_DATA.forEach((element, i) => {
         totalFrom += element.form;
         totalEnergy += element.energy;
         totalCM += +element.height;
@@ -394,9 +483,9 @@ function logTeamData() {
                     </div>
                 </div>
                 <div class='physicals'>
-                    Stamina: ${element.stamina} | Handling: ${element.handling} | Attack: ${element.attack} 
-                    | Defense: ${element.defense} | Technique: ${element.technique} | Strength: ${element.strength}
-                    | Jumping: ${element.jumping} | Speed: ${element.speed} | Agility: ${element.agility} | Kicking: ${element.kicking}
+                    Stamina: ${colorizeNumber(element.stamina)} | Handling: ${colorizeNumber(element.handling)} | Attack: ${colorizeNumber(element.attack)} 
+                    | Defense: ${colorizeNumber(element.defense)} | Technique: ${colorizeNumber(element.technique)} | Strength: ${colorizeNumber(element.strength)}
+                    | Jumping: ${colorizeNumber(element.jumping)} | Speed: ${colorizeNumber(element.speed)} | Agility: ${colorizeNumber(element.agility)} | Kicking: ${colorizeNumber(element.kicking)}
                 </div>
                 <div class='position'>Weight suggests: ${weightSuggestion(element.weight)}</div>
                 <div class='position'>Algorithm suggests: ${suggestedPos[0].position} (${suggestedPos[0].score.toFixed(1)}) or ${suggestedPos[1].position} : (${suggestedPos[1].score.toFixed(1)})</div>
@@ -405,7 +494,7 @@ function logTeamData() {
             </div>`;
     });
 
-    const avg = PLAYERS_DATA.length;
+    const avg = PLAYER_DATA.length;
     dataDisplayAvg.style.marginTop = '10px';
     dataDisplayAvg.innerHTML = `
         <div class='card' style='text-align:center;'>
@@ -446,7 +535,7 @@ function logTeamData() {
 function sortPlayers() {
     const sortBy = document.getElementById("sortOption").value;
 
-    PLAYERS_DATA.sort((a, b) => {
+    PLAYER_DATA.sort((a, b) => {
         const descendingFields = ['csr', 'age', 'form', 'energy', 'height', 'weight', 'stamina', 'handling', 'attack', 'defense', 'technique', 'strength', 'jumping', 'speed', 'agility', 'kicking'];
         
         if (sortBy === 'name') {
@@ -584,11 +673,16 @@ function checkSaveKeyInput(){
     };
 }
 
+function isKeyValid(key){
+    const regex = /^m=\d+&mk=[a-f0-9]{40}$/i;
+    return regex.test(key);
+}
+
 function saveNewKeyandRefresh(){
     _accessKey = document.getElementById('settings-api-key').value;
     // console.log(_accessKey)
     localStorage.setItem('key', _accessKey)
-    initApiCalls(true);
+    // retrieveData(true);
 }
 
 function getEmoji(type, value) {
@@ -621,6 +715,84 @@ function getEmoji(type, value) {
         }
     };
     return emojiMap[type]?.[value] || "-_-";
+}
+
+function colorizeNumber(inputNumber) {
+    let hue = 0; // Starting hue value
+    const saturation = 70; // Saturation value
+    const lightness = 50; // Lightness value
+    let color;
+
+    switch (inputNumber) {
+        case 1:
+            hue = 0; // Red
+            break;
+        case 2:
+            hue = 0; // Orange
+            break;
+        case 3:
+            hue = 0; // Yellow
+            break;
+        case 4:
+            hue = 35; // Light green
+            break;
+        case 5:
+            hue = 35; // Green
+            break;
+        case 6:
+            hue = 35; // Cyan
+            break;
+        case 7:
+            hue = 65; // Light blue
+            break;
+        case 8:
+            hue = 65; // Blue
+            break;
+        case 9:
+            hue = 65; // Indigo
+            break;
+        case 10:
+            hue = 95; // Violet
+            break;
+        case 11:
+            hue = 95; // Magenta
+            break;
+        case 12:
+            hue = 95; // Pink
+            break;
+        case 13:
+            hue = 155; // Light orange
+            break;
+        case 14:
+            hue = 155; // Gold
+            break;
+        case 15:
+            hue = 155; // Chartreuse
+            break;
+        case 16:
+            hue = 180; // Spring green
+            break;
+        case 17:
+            hue = 180; // Turquoise
+            break;
+        case 18:
+            hue = 180; // Sky blue
+            break;
+        case 19:
+            hue = 303; // Steel blue
+            break;
+        case 20:
+            hue = 303; // Periwinkle
+            break;
+        case 21:
+            hue = 303; // Lavender
+            break;
+        default:
+            return 'Number is out of range. Please enter a number between 1 and 21.';
+    }
+
+    color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    return `<span style="color: ${color};">${inputNumber}</span>`;
 }
 
 function showTab(tabNumber) {
