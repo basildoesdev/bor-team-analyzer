@@ -140,92 +140,25 @@ function handleDataOutput(dataType) {
     else if (dataType === 'club') logClubData();
 }
 
-// const positionWeights = {
-//     'Prop': { 'Weight': 1, 'Strength': 1, 'Technique': 1 },
-//     'Hooker': { 'Weight': 1, 'Handling': 1, 'Technique': 1 },
-//     'Lock': { 'Height': 1, 'Jumping': 1, 'Handling': 1 },
-//     'Back Row': { 'Weight': 1, 'Defense': 1, 'Technique': 1 },
-//     'Scrum Half': { 'Handling': 1, 'Agility': 1, 'Attack': 1 },
-//     'Fly Half': { 'Kicking': 1, 'Handling': 1, 'Attack': 1 },
-//     'Center': { 'Attack': 1, 'Defense': 1, 'Speed': 0.9 },
-//     'Wing': { 'Speed': 1, 'Agility': 1, 'Attack': 1 },
-//     'Full Back': { 'Agility': 1, 'Defense': 1, 'Speed': 1 },
-// };
-
-// const positionWeights = {
-//     'Looshead Prop':    { 'Weight': 1,   'Height': 0,   'Stamina': 1, 'Strength': 1,   'Technique': 1, 'Defense': 1,   'Speed': 0.7, 'Handling': 0.7, 'Agility': 0.5, 'Attack': 0.5, 'Kicking': 0,   'Jumping': 0   },
-//     'Hooker':    { 'Weight': 1,   'Height': 0,   'Stamina': 1, 'Strength': 1,   'Handling': 1, 'Defense': 1,   'Technique': 1, 'Speed': 0.7, 'Agility': 0.7, 'Attack': 0.5, 'Kicking': 0,   'Jumping': 0   },
-//     'Tighthead Prop':    { 'Weight': 1,   'Height': 0,   'Stamina': 1, 'Strength': 1,   'Technique': 1, 'Handling': 0.7,'Defense': 0.7, 'Speed': 0.5, 'Agility': 0.5, 'Attack': 0.5, 'Kicking': 0,   'Jumping': 0   },
-//     'Lock':      { 'Weight': 1,   'Height': 1,   'Stamina': 1, 'Jumping': 1,    'Strength': 1,  'Handling': 1,  'Defense': 0.7, 'Technique': 0.7,'Speed': 0.5, 'Agility': 0.5, 'Attack': 0.5, 'Kicking': 0   },
-//     'Blindside Flanker': { 'Weight': 1,   'Height': 0.7, 'Stamina': 1, 'Defense': 1,    'Technique': 1, 'Strength': 0.7,'Jumping': 0.7, 'Handling': 0.7, 'Speed': 0.5, 'Agility': 0.5, 'Attack': 0.5, 'Kicking': 0   },
-//     'Openside Flanker':  { 'Weight': 1,   'Height': 0.5, 'Stamina': 1, 'Defense': 1,    'Technique': 1, 'Speed': 0.7,   'Strength': 0.7, 'Handling': 0.7, 'Agility': 0.5, 'Attack': 0.5, 'Kicking': 0,   'Jumping': 0   },
-//     'No.8':      { 'Weight': 0.7, 'Height': 0.5, 'Stamina': 1, 'Defense': 1,    'Technique': 1, 'Strength': 1,   'Handling': 0.7,'Speed': 0.5, 'Agility': 0.5, 'Attack': 0.5, 'Kicking': 0,   'Jumping': 0   },
-//     'Kicker':    { 'Weight': 0,   'Height': 0,   'Stamina': 1, 'Handling': 1,   'Defense': 1,   'Speed': 1,     'Agility': 1,   'Kicking': 0.7, 'Attack': 0.7, 'Technique': 0.5,'Strength': 0.5,'Jumping': 0   },
-//     'Center':    { 'Weight': 0.5, 'Height': 0,   'Stamina': 1, 'Handling': 1,   'Defense': 1,   'Speed': 0.7,   'Agility': 0.7, 'Attack': 0.7, 'Technique': 0.5,'Strength': 0.5,'Kicking': 0,   'Jumping': 0   },
-//     'Wing':      { 'Weight': 0, 'Height': 0,   'Stamina': 1, 'Handling': 1,   'Speed': 1,     'Agility': 1,   'Attack': 1,   'Defense': 0.7, 'Technique': 0.5,'Strength': 0.5,'Kicking': 0,   'Jumping': 0   },
-// };
-
-// const positionWeights = {
-//     'Looshead Prop': { 
-//         'Weight': 1, 'Height': 0.5, 'Stamina': 1, 'Attack': 0.7, 'Technique': 1, 'Jumping': 0.5, 
-//         'Agility': 0.6, 'Handling': 0.9, 'Defense': 1, 'Strength': 1, 'Speed': 0.7, 'Kicking': 0 
-//     },
-//     'Hooker': { 
-//         'Weight': 1, 'Height': 0.5, 'Stamina': 1, 'Attack': 0.7, 'Technique': 1, 'Jumping': 0.5, 
-//         'Agility': 0.8, 'Handling': 1, 'Defense': 1, 'Strength': 1, 'Speed': 0.7, 'Kicking': 0 
-//     },
-//     'Tighthead Prop': { 
-//         'Weight': 1, 'Height': 0.5, 'Stamina': 1, 'Attack': 0.7, 'Technique': 1, 'Jumping': 0.5, 
-//         'Agility': 0.6, 'Handling': 0.8, 'Defense': 1, 'Strength': 1, 'Speed': 0.6, 'Kicking': 0 
-//     },
-//     'Lock': { 
-//         'Weight': 1, 'Height': 1, 'Stamina': 1, 'Attack': 0.7, 'Technique': 0.8, 'Jumping': 1, 
-//         'Agility': 0.6, 'Handling': 1, 'Defense': 1, 'Strength': 1, 'Speed': 0.5, 'Kicking': 0 
-//     },
-//     'Blindside Flanker': { 
-//         'Weight': 1, 'Height': 0.8, 'Stamina': 1, 'Attack': 0.7, 'Technique': 1, 'Jumping': 0.8, 
-//         'Agility': 0.7, 'Handling': 0.8, 'Defense': 1, 'Strength': 1, 'Speed': 0.6, 'Kicking': 0 
-//     },
-//     'Openside Flanker': { 
-//         'Weight': 1, 'Height': 0.7, 'Stamina': 1, 'Attack': 0.7, 'Technique': 1, 'Jumping': 0.7, 
-//         'Agility': 0.7, 'Handling': 0.8, 'Defense': 1, 'Strength': 1, 'Speed': 0.7, 'Kicking': 0 
-//     },
-//     'No.8': { 
-//         'Weight': 0.8, 'Height': 0.6, 'Stamina': 1, 'Attack': 0.7, 'Technique': 1, 'Jumping': 0.7, 
-//         'Agility': 0.7, 'Handling': 0.8, 'Defense': 1, 'Strength': 1, 'Speed': 0.6, 'Kicking': 0 
-//     },
-//     'Kicker': { 
-//         'Weight': 0.5, 'Height': 0.5, 'Stamina': 1, 'Attack': 1, 'Technique': 0.8, 'Jumping': 0.5, 
-//         'Agility': 1, 'Handling': 1, 'Defense': 1, 'Strength': 0.6, 'Speed': 1, 'Kicking': 1 
-//     },
-//     'Center': { 
-//         'Weight': 0.6, 'Height': 0.5, 'Stamina': 1, 'Attack': 1, 'Technique': 0.8, 'Jumping': 0.5, 
-//         'Agility': 0.9, 'Handling': 1, 'Defense': 1, 'Strength': 0.7, 'Speed': 0.9, 'Kicking': 0.4 
-//     },
-//     'Wing': { 
-//         'Weight': 0.5, 'Height': 0.5, 'Stamina': 1, 'Attack': 1, 'Technique': 0.6, 'Jumping': 0.5, 
-//         'Agility': 1, 'Handling': 1, 'Defense': 1, 'Strength': 0.7, 'Speed': 1, 'Kicking': 0.3 
-//     }
-// };
 const positionWeights = {
     'Looshead Prop': { 
-        'Weight': 1.01, 'Height': 0.51, 'Stamina': 1.00, 'Attack': 0.71, 'Technique': 1.01, 
-        'Jumping': 0.51, 'Agility': 0.61, 'Handling': 0.91, 'Defense': 1.01, 'Strength': 1.01, 
-        'Speed': 0.71, 'Kicking': 0.00
+        'Weight': 1.11, 'Height': 0.51, 'Stamina': 1.00, 'Attack': 0.71, 'Technique': 1.01, 
+        'Jumping': 0.51, 'Agility': 0.61, 'Handling': 0.91, 'Defense': 1.01, 'Strength': 1.12, 
+        'Speed': 0.50, 'Kicking': 0.00
     },
     'Hooker': { 
-        'Weight': 0.94, 'Height': 0.49, 'Stamina': 1.00, 'Attack': 0.69, 'Technique': 0.98, 
-        'Jumping': 0.49, 'Agility': 0.78, 'Handling': 0.98, 'Defense': 0.98, 'Strength': 0.98, 
-        'Speed': 0.69, 'Kicking': 0.00
+        'Weight': 0.99, 'Height': 0.49, 'Stamina': 1.00, 'Attack': 0.69, 'Technique': 1.02, 
+        'Jumping': 0.49, 'Agility': 0.68, 'Handling': 1.21, 'Defense': 0.95, 'Strength': 0.98, 
+        'Speed': 0.50, 'Kicking': 0.00
     },
     'Tighthead Prop': { 
-        'Weight': 1.04, 'Height': 0.52, 'Stamina': 1.00, 'Attack': 0.73, 'Technique': 1.04, 
-        'Jumping': 0.52, 'Agility': 0.62, 'Handling': 0.83, 'Defense': 1.04, 'Strength': 1.04, 
-        'Speed': 0.62, 'Kicking': 0.00
+        'Weight': 1.14, 'Height': 0.52, 'Stamina': 1.00, 'Attack': 0.73, 'Technique': 1.01, 
+        'Jumping': 0.52, 'Agility': 0.61, 'Handling': 0.83, 'Defense': 1.01, 'Strength': 1.13, 
+        'Speed': 0.50, 'Kicking': 0.00
     },
     'Lock': { 
-        'Weight': 0.94, 'Height': 0.94, 'Stamina': 1.00, 'Attack': 0.65, 'Technique': 0.74, 
-        'Jumping': 0.94, 'Agility': 0.54, 'Handling': 0.94, 'Defense': 0.94, 'Strength': 0.94, 
+        'Weight': 0.90, 'Height': 1.03, 'Stamina': 1.00, 'Attack': 0.55, 'Technique': 0.84, 
+        'Jumping': 1.03, 'Agility': 0.54, 'Handling': 0.94, 'Defense': 0.80, 'Strength': 0.94, 
         'Speed': 0.43, 'Kicking': 0.00
     },
     'Blindside Flanker': { 
@@ -259,8 +192,6 @@ const positionWeights = {
         'Speed': 1.02, 'Kicking': 0.31
     }
 };
-
-
 
 function checkPositionWeights(positionWeights) {
     for (let position in positionWeights) {
@@ -308,7 +239,7 @@ function scorePositions(playerStats, weights, position, actual_weight, actual_he
 
 let propMinWeight = 120, propMaxHeight = 190, 
     hookerMinWeight = 110, hookerMaxHeight = 185,
-    lockMinHeight = 199, lockMinWeight = 110,
+    lockMinHeight = 199, lockMinWeight = 105,
     blindsideMinWeight = 110, blindsideMinHeight = 195, 
     opensideMinWeight = 105, opensideMinHeight = 185, 
     number8MinWeight = 105, number8MinHeight = 185,
@@ -329,7 +260,7 @@ function evaluatePlayerPosition(element_weight, element_height, element_aggressi
     
     // Locks
     if (element_height < lockMinHeight && element_weight < lockMinWeight) positionFeedback += "Lock (too light and too Short), ";
-    else if (element_height < lockMinWeight) positionFeedback += "Lock (too light), ";
+    else if (element_weight < lockMinWeight) positionFeedback += "Lock (too light), ";
     else if (element_height < lockMinHeight) positionFeedback += "Lock (too short), ";
 
     //Blindside 
@@ -361,6 +292,7 @@ function suggestedPosition(playerStats, actual_weight, actual_height) {
     });
    
     scores.sort((a, b) => b.score - a.score);
+    // return scores; 
     return scores.slice(0, 2); 
 }
 
@@ -412,9 +344,9 @@ function logClubData() {
 function logTeamData() {
     dataDisplay.innerHTML = '';
     dataDisplayAvg.innerHTML = '';
-    let totalFrom = 0, totalEnergy = 0, totalKG = 0, totalCM = 0, csr = 0, age = 0, agro = 0, disc = 0;
+    let totalFrom = 0, totalEnergy = 0, totalKG = 0, totalCM = 0, csr = 0, age = 0, agro = 0, disc = 0, injury = 0;
     let stam = 0, att = 0, tech = 0, jump = 0, agi = 0, hand = 0, def = 0, str = 0, spee = 0, kick = 0;
-    
+    console.log(PLAYERS_DATA);
     PLAYERS_DATA.forEach((element, i) => {
         totalFrom += element.form;
         totalEnergy += element.energy;
@@ -461,6 +393,7 @@ function logTeamData() {
                     | <span class='age'> ${element.age}.yo </span>
                     | <span class='form'>Form: ${element.form}</span> | <span class='energy'>Energy: ${isPremium ? element.energy/10 : element.energy} </span>
                     | <span class='csr'> CSR: ${Number(element.csr).toLocaleString()}</span> | <span class='performance'>Performance Rating: ${isPremium? element.form + ((element.energy/10)/2) : element.form + (element.energy/2)} (${isPremium ? (element.form + (element.energy/10) / 2 + element.csr / 1000).toFixed(0) : (element.form + element.energy / 2 + element.csr / 1000).toFixed(0)})</span>
+                    <div class='red'>${isDateInPast(element.injured) ? " ❗ Injured until: " + formatDateString(element.injured) + " ❗": " "} </div>
                     <div>
                         <span class='physicals'>${element.weight}kg | ${element.height}cm | ${getEmoji('aggression', element.aggression)} | ${getEmoji('discipline', element.discipline)}</span> 
                     </div>
@@ -473,6 +406,7 @@ function logTeamData() {
                 <div class='position'>Weight suggests: ${weightSuggestion(element.weight)}</div>
                 <div class='position'>Algorithm suggests: ${suggestedPos[0].position} (${suggestedPos[0].score.toFixed(1)}) or ${suggestedPos[1].position} : (${suggestedPos[1].score.toFixed(1)})</div>
                 <div class='physicals'>Exclusions: ${evaluatePlayerPosition(element.weight, element.height)}</div>
+                
             </div>`;
     });
 
@@ -545,6 +479,13 @@ function calculatePerformance(player) {
     return isPremium ? player.form + (player.energy / 10) / 2 : player.form + player.energy / 2 ;
         // ? player.form + (player.energy / 10) / 2 + player.csr / 1000 
         // : player.form + player.energy / 2 + player.csr / 1000;
+}
+
+function isDateInPast(date_string){
+    const inputDate = new Date(date_string);
+    const currentDate = new Date();
+    // console.log(inputDate > currentDate ? " True": "False")
+    return inputDate > currentDate
 }
 
 function formatDateString(date_string){
