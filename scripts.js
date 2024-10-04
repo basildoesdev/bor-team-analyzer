@@ -542,19 +542,6 @@ function displayClubandManagerInfo() {
     settingsInfo.innerHTML = `
         <div class='card'>
             <div class='flex-align'>
-                <span>WIP Settings</span>
-                <span>(Version ${version})</span>
-            </div>
-            <div class='physicals'>
-                <div>Min Prop Weight & Height</div>
-                <div>Min Hooker Weight & Height</div>
-                <div>Min Lock Height</div>
-                <div>Positional skill algorithm</div>
-                <div>Squad sort</div>
-            </div>
-        </div>
-        <div class='card'>
-            <div class='flex-align'>
                 <span>
                     <label for="settings-api-key" aria-label="Enter API Key">API Key</label>
                     <input type="text" id="settings-api-key" oninput="checkSaveKeyInput()">
@@ -566,6 +553,19 @@ function displayClubandManagerInfo() {
         </div>
         <div class='card'>
         🪲 Bug? pm yaya <a href='https://www.blackoutrugby.com/game/me.office.php#page=mail&newmessage=1&folder=1&tab=inbox target="_blank"'>here</a>
+        </div>
+        <div class='card'>
+            <div class='flex-align'>
+                <span>WIP Items</span>
+                <span>(Version ${version})</span>
+            </div>
+            <div class='physicals'>
+                <div>Min Prop Weight & Height ✅</div>
+                <div>Min Hooker Weight & Height ✅</div>
+                <div>Min Lock Height ✅</div>
+                <div>Positional skill algorithm ✅</div>
+                <div>Squad sort ✅</div>
+            </div>
         </div>`;
 }
 
