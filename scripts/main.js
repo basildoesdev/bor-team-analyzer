@@ -1,4 +1,4 @@
-const version = 0.71;
+const version = 0.8;
 const versionDisplay = document.getElementById('version');
 const infoDisplay = document.getElementById('information');
 const dataDisplay = document.getElementById('player-card-container');
@@ -35,187 +35,63 @@ let isPremium = false;
 let refresh;
 
 
-
+// Save key if checkbox is checked
 submitBtn.addEventListener('click', () => {
-    isSaveKey.checked ? localStorage.setItem('key', accessKey.value): " ";
-    // initApiCalls(true);
+    if (isSaveKey.checked) localStorage.setItem('key', accessKey.value);
 });
 
-window.onload = function(){
-    if (localStorage.getItem('key')){
-        _mainKey = localStorage.getItem('key').slice(-40)
-        retrieveData(true)
+// Initialize on window load
+window.onload = () => {
+    const savedKey = localStorage.getItem('key');
+    if (savedKey) {
+        _mainKey = savedKey.slice(-40);
+        retrieveData(true);
     }
+};
 
-    // localStorage.getItem('key') ? retrieveData(true) : " ";
+// Log development data
+function devDataLogs() {
+    console.log('Player Data:', PLAYER_DATA);
+    console.log('Club Data:', CLUB_DATA);
+    console.log('Member Data:', MEMBER_DATA);
 }
 
-function devDataLogs(){
-    console.log('Player Data');
-    console.log(PLAYER_DATA);
-    console.log('Club Data');
-    console.log(CLUB_DATA);
-    console.log('Member Data');
-    console.log(MEMBER_DATA);
-}
-
-function checkKeyInput(){
+// Check if the access key input is valid
+function checkKeyInput() {
     const isValidKey = /^m=(\d+)&mk=([a-fA-F0-9]{40})$/;
-    let fullkey = document.getElementById('access-key').value;
-    if(isValidKey.test(fullkey)){
-        _mainKey = fullkey.slice(-40);
-        _memberid = trimkey(fullkey)
-        // console.log('Member ID: ' + _memberid);
+    const fullKey = accessKey.value;
+
+    if (isValidKey.test(fullKey)) {
+        _mainKey = fullKey.slice(-40);
+        _memberid = trimKey(fullKey);
         accessKey.style.color = 'green';
         submitBtn.style.backgroundColor = '#e73d3d';
         submitBtn.disabled = false;
-        keyValidDisplay.innerHTML ='<p>Access Key:<span class="green"> (Valid Key Format) </span></p>';
-        // retrieveData();
+        keyValidDisplay.innerHTML = '<p>Access Key:<span class="green"> (Valid Key Format) </span></p>';
     } else {
         accessKey.style.color = 'red';
         submitBtn.style.backgroundColor = '#a39999';
         submitBtn.disabled = true;
         keyValidDisplay.innerHTML = '<p>Access Key:<span class="red"> (Invalid Key Format) </span></p>';
-        // console.log('Unvalid Key')
     }
-    
 }
 
-function trimkey(key){
-    let trimmed = key.split('=')[1].split('&')[0]
-    return trimmed
+// Trim the key to extract member ID
+function trimKey(key) {
+    return key.split('=')[1].split('&')[0];
 }
 
-function fetchRugbyData(request_type, additionalParams = {}) {
-    const url = 'https://corsproxy.io/?https://classic-api.blackoutrugby.com/?d=1038';
-    // console.log(`${typeof(_mainKey)} | ${_mainKey}`)
-    const mailparams = {
-        d: 1038,
-        dk: '2yysSrd2fZxuOu5y',
-        r: request_type,
-        m: _memberid,
-        mk: _mainKey,
-        json: 1,
-        ...additionalParams
-    };
-    
-    return fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-        },
-        body: new URLSearchParams(mailparams)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'Ok') {
-            return data;  // Return data if the request is successful
-        } else {
-            // return data;
-            throw new Error(data.error || 'Unknown error occurred');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error); badKeyDay();
-        throw error;  // Re-throw the error to handle it in the caller
-    });
+// Validate key format
+function isKeyValid(key) {
+    return /^m=\d+&mk=[a-f0-9]{40}$/i.test(key);
 }
 
-// Example usage
-function retrieveData(initcall){
-    
-    if (initcall){
-        let localKey = localStorage.getItem('key');
-        _memberid = trimkey(localKey);
-    }
-
-    form.style.display = 'none';
-    infoDisplay.innerHTML = `<h3 style="margin-top:20px;"> Requesting...</h3>`;
-
-    (async () => {
-        try {
-            // First fetch for 'm'
-            // console.log(typeof(_memberid) + " | " + _memberid)
-            const memberData = await fetchRugbyData('m', {memberid: _memberid,});
-            // console.log('Fetched member data:', memberData);
-            MEMBER_DATA = Object.values(memberData.members);
-            
-            _teamid = MEMBER_DATA[0].teamid;
-
-            _globals.day = memberData.gameDate.day;
-            _globals.round = memberData.gameDate.round;
-            _globals.season = memberData.gameDate.season;
-
-            document.getElementById('game-date').innerHTML = `
-            Season: ${_globals.season},
-            Round: ${_globals.round}, 
-            Day: ${_globals.day}
-            `;
-            // console.log(_globals.season)
-
-            // Assuming MEMBER_DATA is populated
-            // console.log(MEMBER_DATA[0].teamid);
-            
-            // Second fetch for 't', using data from the first fetch
-            const clubData = await fetchRugbyData('t', { teamid: _teamid });
-            // console.log('Fetched club data:', clubData);
-            CLUB_DATA = Object.values(clubData.teams);
-            
-            // Assuming PLAYER_DATA is populated
-            // console.log(CLUB_DATA[0].name);
-            
-            // Second fetch for 'p', using data from the first fetch
-            const playerData = await fetchRugbyData('p', { teamid: _teamid });
-            // console.log('Fetched player data:', playerData);
-            PLAYER_DATA =  Object.values(playerData.players).sort((a, b) => b.csr - a.csr);
-            
-            // Assuming PLAYER_DATA is populated
-            // console.log(PLAYER_DATA[0].name);
-
-            // Second fetch for 'p', using data from the first fetch
-            const playerStatisticsData = await fetchRugbyData('ps', {playerid: (playerstatisticshelper(PLAYER_DATA))});
-            // console.log('Fetched player stats data:', playerStatisticsData );
-            PLAYER_STATISTICS_DATA = Object.values(playerStatisticsData['player statistics']);
-            
-            // Assuming PLAYER_DATA is populated
-            // console.log(PLAYER_STATISTICS_DATA);
-
-             // Second fetch for 'p', using data from the first fetch
-             const lastFixtureData = await fetchRugbyData('f', {teamid: _teamid, last: 4});
-            //  console.log('Fetched player stats data:', lastFixtureData );
-            //  PLAYER_STATISTICS_DATA = Object.values(lastFixtureData['player statistics']);
-             
-             // Assuming PLAYER_DATA is populated
-            //  console.log(lastFixtureData);
-            // const maildata = await fetchRugbyData('ma', {to: [ "yaya",] , "subject": "hello", "body":["world"],})
-             // UI update calls
-            // populateTabs();
-            logTeamData();
-            displayClubandManagerInfo();
-            logClubData();
-
-            infoDisplay.innerHTML = '';
-
-            
-        } catch (error) {
-            console.error('Error during fetch operations:', error);
-        }
-    })();
+// Save new key and refresh data
+function saveNewKeyandRefresh() {
+    const _accessKey = document.getElementById('settings-api-key').value;
+    localStorage.setItem('key', _accessKey);
+    retrieveData(true);
 }
-// Fetch using a different type with additional params
-
-function playerstatisticshelper(playerData){
-    let playerIdString = '';
-    playerData.forEach(element => {
-        playerIdString += element.id + ',';
-        
-    });
-    playerIdString = playerIdString.slice(0, -1);
-    // console.log(playerIdString)
-    return playerIdString
-};
-
 
 function badKeyDay(){
     infoDisplay.innerHTML += "<h3 class='red'> Bad Key .. 😢</h3><button id='reload'> Reload </button>";
@@ -226,6 +102,119 @@ function badKeyDay(){
         localStorage.clear();
         location.reload(true);
     })
+}
+
+function checkSaveKeyInput(){
+    let _key = document.getElementById("settings-api-key").value
+    
+    if(isKeyValid(_key)){
+        document.getElementById("settings-api-key").style.color = "green"
+        document.getElementById("settings-api-save").disabled = false;
+        document.getElementById("settings-api-save").style.backgroundColor = '#e73d3d';
+    }else{
+        document.getElementById("settings-api-key").style.color = "red"
+        document.getElementById("settings-api-save").disabled = true;
+        document.getElementById("settings-api-save").style.backgroundColor = '#5e5d5d';
+        
+    };
+}
+
+// KEY AREAS  CLOSE //
+
+// FETCH AREA OPEN //
+
+async function fetchRugbyData(request_type, additionalParams = {}) {
+    const url = 'https://corsproxy.io/?https://classic-api.blackoutrugby.com/?d=1038';
+    const mailparams = {
+        d: 1038,
+        dk: '2yysSrd2fZxuOu5y',
+        r: request_type,
+        m: _memberid,
+        mk: _mainKey,
+        json: 1,
+        ...additionalParams
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json',
+            },
+            body: new URLSearchParams(mailparams)
+        });
+        const data = await response.json();
+        
+        if (data.status === 'Ok') {
+            return data;  // Return data if the request is successful
+        } else {
+            throw new Error(data.error || 'Unknown error occurred');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        badKeyDay();
+        throw error;  // Re-throw the error to handle it in the caller
+    }
+}
+
+async function retrieveData(initcall) {
+    if (initcall) {
+        let localKey = localStorage.getItem('key');
+        _memberid = trimKey(localKey);
+    }
+
+    form.style.display = 'none';
+    infoDisplay.innerHTML = `<h3 style="margin-top:20px;"> Requesting...</h3>`;
+
+    try {
+        const memberData = await fetchRugbyData('m', { memberid: _memberid });
+        MEMBER_DATA = Object.values(memberData.members);
+        _teamid = MEMBER_DATA[0].teamid;
+
+        _globals = {
+            day: memberData.gameDate.day,
+            round: memberData.gameDate.round,
+            season: memberData.gameDate.season
+        };
+
+        document.getElementById('game-date').innerHTML = `
+            Season: ${_globals.season}, Round: ${_globals.round}, Day: ${_globals.day}
+        `;
+
+        const clubData = await fetchRugbyData('t', { teamid: _teamid });
+        CLUB_DATA = Object.values(clubData.teams);
+
+        const playerData = await fetchRugbyData('p', { teamid: _teamid });
+        PLAYER_DATA = Object.values(playerData.players).sort((a, b) => b.csr - a.csr);
+
+        const playerStatisticsData = await fetchRugbyData('ps', { playerid: playerStatisticsHelper(PLAYER_DATA) });
+        PLAYER_STATISTICS_DATA = Object.values(playerStatisticsData['player statistics']);
+
+        const lastFixtureData = await fetchRugbyData('f', { teamid: _teamid, last: 4 });
+
+        // UI update calls
+        logTeamData();
+        displayClubandManagerInfo();
+        logClubData();
+
+        infoDisplay.innerHTML = '';
+    } catch (error) {
+        console.error('Error during fetch operations:', error);
+    }
+}
+
+import { retrieveData, fetchRugbyData } from "./fetchApi.js";
+
+// Fetch using a different type with additional params
+
+// FETCH AREA CLOSE //
+
+// POSITIONAL ALGORITHM OPEN //
+
+function playerStatisticsHelper(playerData) {
+    // Join player IDs into a comma-separated string
+    return playerData.map(player => player.id).join(',');
 }
 
 const positionWeights = {
@@ -283,12 +272,7 @@ const positionWeights = {
 
 function checkPositionWeights(positionWeights) {
     for (let position in positionWeights) {
-        let total = 0;
-        for (let attribute in positionWeights[position]) {
-            total += positionWeights[position][attribute];
-        }
-        console.log(`${position}: Total = ${total}`);
-        
+        const total = Object.values(positionWeights[position]).reduce((sum, val) => sum + val, 0);
         if (total !== 9) {
             console.log(`Error: ${position} does not equal 9, it equals ${total}`);
         } else {
@@ -297,101 +281,86 @@ function checkPositionWeights(positionWeights) {
     }
 }
 
-// checkPositionWeights(positionWeights);
-
-
 function normalizeValue(value, maxStat, min, max) {
+    // Normalize value between min and max
     return Math.max(1, Math.min(maxStat, ((value - min) / (max - min)) * (maxStat - 1) + 1));
 }
 
-function scorePositions(playerStats, weights, position, actual_weight, actual_height) {
-    if (position === 'Tighthead Prop' && actual_weight < propMinWeight) return 0;
-    if (position === 'Tighthead Prop' && actual_height > propMaxHeight) return 0;
-    if (position === 'Looshead Prop' && actual_weight < propMinWeight) return 0;
-    if (position === 'Looshead Prop' && actual_height > propMaxHeight) return 0;
-    if (position === 'Hooker' && actual_weight < hookerMinWeight) return 0;
-    if (position === 'Hooker' && actual_height > hookerMaxHeight) return 0;
-    if (position === 'Lock' && actual_height < lockMinHeight) return 0;
-    if (position === 'Lock' && actual_weight < lockMinWeight) return 0;
-    if (position === 'Blindside Flanker' && actual_height < blindsideMinHeight) return 0;
-    if (position === 'Blindside Flanker' && actual_weight < blindsideMinWeight) return 0;
-    if (position === 'Openside Flanker' && actual_height > opensideMinHeight) return 0;
-    if (position === 'Openside Flanker' && actual_weight < opensideMinWeight) return 0;
-    if (position === 'No.8' && actual_weight < number8MinWeight) return 0;
-    if (position === 'No.8' && actual_weight < number8MinHeight) return 0;
-    if (position === 'Center' && actual_weight < centerMinWeight) return 0;
+function scorePositions(playerStats, weights, position, actualWeight, actualHeight) {
+    const propHeightCheck = ['Tighthead Prop', 'Looshead Prop'].includes(position) && actualHeight > minHeightWeight.Prop.maxHeight;
+    const propWeightCheck = ['Tighthead Prop', 'Looshead Prop'].includes(position) && actualWeight < minHeightWeight.Prop.minWeight;
+    const hookerCheck = position === 'Hooker' && (actualWeight < minHeightWeight.Hooker.minWeight || actualHeight > minHeightWeight.Hooker.maxHeight);
+    const lockCheck = position === 'Lock' && (actualHeight < minHeightWeight.Lock.minHeight || actualWeight < minHeightWeight.Lock.minWeight);
+    const blindsideCheck = position === 'Blindside Flanker' && (actualHeight < minHeightWeight.Blindside.minHeight || actualWeight < minHeightWeight.Blindside.minWeight);
+    const opensideCheck = position === 'Openside Flanker' && (actualHeight > minHeightWeight.Openside.minHeight || actualWeight < minHeightWeight.Openside.minWeight);
+    const number8Check = position === 'No.8' && (actualWeight < minHeightWeight.Number8.minWeight || actualHeight < minHeightWeight.Number8.minHeight);
+    const centerCheck = position === 'Center' && actualWeight < minHeightWeight.Center.minWeight;
+
+    if (propHeightCheck || propWeightCheck || hookerCheck || lockCheck || blindsideCheck || opensideCheck || number8Check || centerCheck) {
+        return 0;
+    }
+
     return Object.keys(weights).reduce((score, stat) => {
         return score + (playerStats[stat] || 0) * weights[stat];
     }, 0);
 }
 
-let propMinWeight = 120, propMaxHeight = 190, 
-    hookerMinWeight = 110, hookerMaxHeight = 185,
-    lockMinHeight = 199, lockMinWeight = 105,
-    blindsideMinWeight = 110, blindsideMinHeight = 195, 
-    opensideMinWeight = 105, opensideMinHeight = 185, 
-    number8MinWeight = 105, number8MinHeight = 185,
-    centerMinWeight = 90;
+// POSITIONAL ALGORITHM CLOSE //
 
-function evaluatePlayerPosition(element_weight, element_height, element_aggression) {
-    let positionFeedback = '';
+// Minimum weight and height values
+const minHeightWeight = {
+    'Prop': { minWeight: 120, maxHeight: 190 },
+    'Hooker': { minWeight: 110, maxHeight: 185 },
+    'Lock': { minHeight: 199, minWeight: 105 },
+    'Blindside': { minHeight: 195, minWeight: 110 },
+    'Openside': { minHeight: 185, minWeight: 105 },
+    'Number8': { minHeight: 185, minWeight: 105 },
+    'Center': { minWeight: 90 }
+};
 
-    // Props
-    if (element_weight < propMinWeight && element_height > propMaxHeight) positionFeedback += "Props (too light and too tall), ";
-    else if (element_weight < propMinWeight) positionFeedback += "Props (too light), ";
-    else if (element_height > propMaxHeight) positionFeedback += "Props (too tall), ";
-    
-    // Hookers 
-    if (element_weight < hookerMinWeight && element_height > hookerMaxHeight) positionFeedback += "Hooker (too light and too tall), ";
-    else if (element_weight < hookerMinWeight) positionFeedback += "Hooker (too light), ";
-    else if (element_height > hookerMaxHeight) positionFeedback += "Hooker (too tall), ";
-    
-    // Locks
-    if (element_height < lockMinHeight && element_weight < lockMinWeight) positionFeedback += "Lock (too light and too Short), ";
-    else if (element_weight < lockMinWeight) positionFeedback += "Lock (too light), ";
-    else if (element_height < lockMinHeight) positionFeedback += "Lock (too short), ";
+function evaluatePlayerPosition(weight, height) {
+    let feedback = '';
 
-    //Blindside 
-    if (element_height < blindsideMinHeight && element_weight < blindsideMinWeight) positionFeedback += "No.6 (too light and too Short), ";
-    else if (element_height < blindsideMinWeight) positionFeedback += "No.6 (too light), ";
-    else if (element_height < blindsideMinHeight) positionFeedback += "No.6  (too short), ";
-    
-    //Openside 
-    if (element_height < opensideMinHeight && element_weight < opensideMinWeight) positionFeedback += "No.7 (too light and too Short), ";
-    else if (element_height < opensideMinWeight) positionFeedback += "No.7 (too light), ";
-    else if (element_height < opensideMinHeight) positionFeedback += "No.7  (too short), ";
+    feedback += checkPosition('Props', weight, height, minHeightWeight.Prop);
+    feedback += checkPosition('Hooker', weight, height, minHeightWeight.Hooker);
+    feedback += checkPosition('Lock', weight, height, minHeightWeight.Lock, true);
+    feedback += checkPosition('No.6', weight, height, minHeightWeight.Blindside, true);
+    feedback += checkPosition('No.7', weight, height, minHeightWeight.Openside, true);
+    feedback += checkPosition('No.8', weight, height, minHeightWeight.Number8, true);
+    if (weight < minHeightWeight.Center.minWeight) feedback += "Center (too light), ";
 
-    //Number8
-    if (element_height < number8MinHeight && element_weight < number8MinWeight) positionFeedback += "No.8 (too light and too Short), ";
-    else if (element_height < number8MinWeight) positionFeedback += "No.8 (too light), ";
-    else if (element_height < number8MinHeight) positionFeedback += "No.8  (too short), ";
-
-    //Center
-    if (element_weight < centerMinWeight) positionFeedback += "Center (too light)  ";
-
-    return positionFeedback.slice(0, -2) || ' ';
+    return feedback.slice(0, -2) || ' ';
 }
 
-function suggestedPosition(playerStats, actual_weight, actual_height) {
-    const scores = Object.keys(positionWeights).map(position => {
-        const score = scorePositions(playerStats, positionWeights[position], position, actual_weight, actual_height);
-        // console.log(`${position} : ${score}`);
-        return { position, score };
-    });
-   
+function checkPosition(position, weight, height, { minWeight, maxHeight, minHeight }, isForward = false) {
+    let feedback = '';
+    if (isForward) {
+        if (height < minHeight && weight < minWeight) feedback += `${position} (too light and too short), `;
+        else if (weight < minWeight) feedback += `${position} (too light), `;
+        else if (height < minHeight) feedback += `${position} (too short), `;
+    } else {
+        if (weight < minWeight && height > maxHeight) feedback += `${position} (too light and too tall), `;
+        else if (weight < minWeight) feedback += `${position} (too light), `;
+        else if (height > maxHeight) feedback += `${position} (too tall), `;
+    }
+    return feedback;
+}
+
+function suggestedPosition(playerStats, weight, height) {
+    const scores = Object.keys(positionWeights).map(position => ({
+        position,
+        score: scorePositions(playerStats, positionWeights[position], position, weight, height)
+    }));
+
     scores.sort((a, b) => b.score - a.score);
-    // return scores; 
     return scores.slice(0, 2); 
 }
 
-function weightSuggestion(weight){
-    if(weight < 100) return 'Back';
-    else if( weight > 105) return 'Forward';
-    else return 'Forward or Back';
+function weightSuggestion(weight) {
+    return weight < 100 ? 'Back' : (weight > 105 ? 'Forward' : 'Forward or Back');
 }
 
 
-// This name is misleading it is for the tabs titles mainly
 function logClubData() {
     infoContainer.style.display = 'block';
     versionDisplay.innerHTML = `<span><h4 class='physicals'>Version : ${version}</h4></span> <span><h3 id="refresh">↻ <small>Refresh</small> </h3></span>`
@@ -536,66 +505,33 @@ function logTeamData() {
                 </select>`;
 }
 
-function sortPlayers() {
+export function sortPlayers() {
     const sortBy = document.getElementById("sortOption").value;
+    const descendingFields = ['csr', 'age', 'form', 'energy', 'height', 'weight', 'stamina', 'handling', 'attack', 'defense', 'technique', 'strength', 'jumping', 'speed', 'agility', 'kicking'];
 
     PLAYER_DATA.sort((a, b) => {
-        const descendingFields = ['csr', 'age', 'form', 'energy', 'height', 'weight', 'stamina', 'handling', 'attack', 'defense', 'technique', 'strength', 'jumping', 'speed', 'agility', 'kicking'];
-        
-        if (sortBy === 'name') {
-            return a.name.localeCompare(b.name); 
-        } 
-        if (sortBy === 'performance') {
-            const performanceA = calculatePerformance(a) ?? 0;
-            const performanceB = calculatePerformance(b) ?? 0;
-            return performanceB - performanceA; 
-        }
-        if (descendingFields.includes(sortBy)) {
-            return (b[sortBy] ?? 0) - (a[sortBy] ?? 0); 
-        }
-        return 0; 
+        if (sortBy === 'name') return a.name.localeCompare(b.name);
+        if (sortBy === 'performance') return (calculatePerformance(b) ?? 0) - (calculatePerformance(a) ?? 0);
+        if (descendingFields.includes(sortBy)) return (b[sortBy] ?? 0) - (a[sortBy] ?? 0);
+        return 0;
     });
-    
+
     dataDisplay.innerHTML = '';
     logTeamData();
-
     document.getElementById("sortOption").value = sortBy;
-   
 }
 
 function calculatePerformance(player) {
-    return isPremium ? player.form + (player.energy / 10) / 2 : player.form + player.energy / 2 ;
-        // ? player.form + (player.energy / 10) / 2 + player.csr / 1000 
-        // : player.form + player.energy / 2 + player.csr / 1000;
-}
-
-function isDateInPast(date_string){
-    const inputDate = new Date(date_string);
-    const currentDate = new Date();
-    // console.log(inputDate > currentDate ? " True": "False")
-    return inputDate > currentDate
-}
-
-function formatDateString(date_string){
-    const inputDate = date_string;
-    const date = new Date(inputDate);
-    const readableDate = date.toLocaleString("en-US",{
-        year: 'numeric',
-        month: 'long',
-        day:'numeric',
-        hour:'2-digit',
-        minute:'2-digit',
-        second:'2-digit',
-        timeZoneName: 'short'
-    })
-    return readableDate;
+    return isPremium 
+        ? player.form + (player.energy / 10) / 2 
+        : player.form + player.energy / 2;
 }
 
 function displayClubandManagerInfo() {
     const { username, realname, email, dateregistered, lastclick, teams } = MEMBER_DATA[0];
     const { name, nickname_1, country_iso, bank_balance, ranking_points, prev_ranking_points, members, contentment, regional_rank, minor_sponsors, national_rank, total_salary, world_rank } = CLUB_DATA[0];
 
-    const formattedBalance = bank_balance > 0 ? `<span class="form">$${Number(bank_balance).toLocaleString()}</span>` : `<span class="red">$${Number(bank_balance).toLocaleString()}</span>`;
+    const formattedBalance = formatBankBalance(bank_balance);
     const registerDate = formatDateString(dateregistered), lastClick = formatDateString(lastclick);
     const ratingPointsMovement = ranking_points > prev_ranking_points ? "📈" : "📉";
 
@@ -603,39 +539,36 @@ function displayClubandManagerInfo() {
         <div class='card'>
             <h3>Manager Information</h3>
             <div>Manager: ${username} | (${realname}) | Email: ${email}</div>
-            <div>Premium: ${isPremium ? '⭐' : 'Nope 😢 <a href="https://www.blackoutrugby.com/game/me.account.php#page=store" target="_blank" class="premium">upgrade</a>'}</div>
+            <div>Premium: ${isPremium ? '⭐' : getPremiumInfoLink()}</div>
             <div>Managed Teams: ${teams.length}</div>
             <div>Registered: ${registerDate}</div>
             <div>Last Click: ${lastClick}</div>
         </div>`;
 
-    clubInfo.innerHTML = `<div class='card'>
+    clubInfo.innerHTML = `
+        <div class='card'>
             <div class="club-name-title">
             Name: ${name} | <span class='physicals'>'${nickname_1}'
             <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/>
             </div>
             <hr/>
             <br>
-            <div>
-            Bank: ${formattedBalance}
-             | Team Salaries: <span class='red'>$${Number(total_salary).toLocaleString()}
-            </div>
+            <div>Bank: ${formattedBalance} | Team Salaries: <span class='red'>$${Number(total_salary).toLocaleString()}</span></div>
             <br>
-            <div>Members: ${members} | <span class='physicals'>${getEmoji('contentment', contentment)}</div>
+            <div>Members: ${members} | ${getEmoji('contentment', contentment)}</div>
             <div>Sponsors: ${minor_sponsors}</div>
             <br>
-            <div>
-            Rankings: <span class='${ranking_points > prev_ranking_points ? 'green' : 'red'}'>${ranking_points} ${ratingPointsMovement} | ${(ranking_points - prev_ranking_points).toFixed(4)}</span></div>
+            <div>Rankings: <span class='${getRankingClass(ranking_points, prev_ranking_points)}'>${ranking_points} ${ratingPointsMovement} | ${(ranking_points - prev_ranking_points).toFixed(4)}</span></div>
             <div>Regional: ${regional_rank}</div>
             <div>National: ${national_rank}</div>
             <div>World: ${world_rank}</div>
-            
-            
-            
         </div>`;
 
-    settingsInfo.innerHTML = `
-        <div class='card'>
+    settingsInfo.innerHTML = getSettingsInfo();
+}
+
+function getSettingsInfo(){
+    return `<div class='card'>
             <div class='flex-align'>
                 <span>
                     <label for="settings-api-key" aria-label="Enter API Key">API Key</label>
@@ -661,34 +594,43 @@ function displayClubandManagerInfo() {
                 <div>Positional skill algorithm ✅</div>
                 <div>Squad sort ✅</div>
             </div>
-        </div>`;
+        </div>`
 }
 
-function checkSaveKeyInput(){
-    let _key = document.getElementById("settings-api-key").value
-    
-    if(isKeyValid(_key)){
-        document.getElementById("settings-api-key").style.color = "green"
-        document.getElementById("settings-api-save").disabled = false;
-        document.getElementById("settings-api-save").style.backgroundColor = '#e73d3d';
-    }else{
-        document.getElementById("settings-api-key").style.color = "red"
-        document.getElementById("settings-api-save").disabled = true;
-        document.getElementById("settings-api-save").style.backgroundColor = '#5e5d5d';
-        
-    };
+function isDateInPast(date_string){
+    const inputDate = new Date(date_string);
+    const currentDate = new Date();
+    // console.log(inputDate > currentDate ? " True": "False")
+    return inputDate > currentDate
 }
 
-function isKeyValid(key){
-    const regex = /^m=\d+&mk=[a-f0-9]{40}$/i;
-    return regex.test(key);
+function formatDateString(date_string){
+    const inputDate = date_string;
+    const date = new Date(inputDate);
+    const readableDate = date.toLocaleString("en-US",{
+        year: 'numeric',
+        month: 'long',
+        day:'numeric',
+        hour:'2-digit',
+        minute:'2-digit',
+        second:'2-digit',
+        timeZoneName: 'short'
+    })
+    return readableDate;
 }
 
-function saveNewKeyandRefresh(){
-    _accessKey = document.getElementById('settings-api-key').value;
-    // console.log(_accessKey)
-    localStorage.setItem('key', _accessKey)
-    // retrieveData(true);
+function formatBankBalance(balance) {
+    return balance > 0 
+        ? `<span class="form">$${Number(balance).toLocaleString()}</span>` 
+        : `<span class="red">$${Number(balance).toLocaleString()}</span>`;
+}
+
+function getPremiumInfoLink() {
+    return 'Nope 😢 <a href="https://www.blackoutrugby.com/game/me.account.php#page=store" target="_blank" class="premium">upgrade</a>';
+}
+
+function getRankingClass(current, previous) {
+    return current > previous ? 'green' : 'red';
 }
 
 function getEmoji(type, value) {
@@ -801,7 +743,7 @@ function colorizeNumber(inputNumber) {
     return `<span style="color: ${color};">${inputNumber}</span>`;
 }
 
-function showTab(tabNumber) {
+export function showTab(tabNumber) {
     // Hide all tab contents
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => tab.classList.remove('active'));
@@ -815,8 +757,13 @@ function showTab(tabNumber) {
     document.getElementById('tab-' + tabNumber + '-btn').classList.add('active');
 }
 
-function showTabDropdown(tabNumber) {
+export function showTabDropdown(tabNumber) {
     showTab(tabNumber); // Reuse the same logic
 }
+
+window.showTab = showTab;
+window.showTabDropdown = showTabDropdown;
+window.checkKeyInput = checkKeyInput;
+window.sortPlayers = sortPlayers;
 
 
