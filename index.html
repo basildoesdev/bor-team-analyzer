@@ -9,10 +9,11 @@
     <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="components.css">
     <link rel="stylesheet" href="tab-dropdown.css">
+    <link rel="stylesheet" href="responsive.css">
 </head>
 <body>
     <div id="team-analyzer-form">
-        <h2> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer</h2>
+        <h2 class="app-title"> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer</h2>
         <div class="input-container">
             <label id="key-valid-display" for="access-key">Access Key:</label>
             <input type="text" id="access-key" name="access-key" placeholder="🗝️" oninput="checkKeyInput()" required>
@@ -30,8 +31,8 @@
     <p id="information"></p>
     <div id="info-container" class="container">
         <div id="version"></div>
-        <div id="game-date"></div>
-        <h2 style="text-align:center;"> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer: </h2>
+        <h2 class="app-title"> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer: </h2>
+        <div id="game-date" style="text-align:center;"></div>
 
         <nav class="tab-nav">
             <button id="tab-1-btn" class="tab-btn" onclick="showTab(1)">Tab 1</button>
@@ -68,5 +69,6 @@
 
 </body>
 <script src="scripts.js"></script>
+<script src="updates.js"></script>
 
 </html>

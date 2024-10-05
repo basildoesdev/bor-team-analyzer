@@ -28,7 +28,8 @@ body {
     height: 100%;
 }
 
-h2 {
+.app-title{
     margin-bottom: 5px;
     text-shadow: 0 0 10px #110e0e;
+    padding-bottom: 1rem;
 }

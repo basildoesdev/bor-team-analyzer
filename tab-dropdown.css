@@ -14,18 +14,18 @@
     border: none;
     border-bottom: 2px solid var(--accent-color);
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    /* transition: background-color 0.3s ease; */
     /* min-width: 300px; */
 }
 
 .tab-btn:hover {
-    background-color: rgba(231, 61, 61, 0.7);
+    border: 2px solid var(--accent-color);
 }
 
 .tab-content {
     display: none;
     width: 100%;
-    background-color: #4a4a4a;
+    /* background-color: #4a4a4a; */
 }
 
 .tab-content.active {
@@ -49,8 +49,11 @@
 }
 
 .tab-nav .tab-btn.active {
-    background-color: #272626;
+    background-color: #535353;
     color: #fff;
+    border-right: 2px solid var(--accent-color);
+    border-left: 2px solid var(--accent-color);
+    
 }
 
 .tab-dropdown, .sort-tab-dropdown {
@@ -93,39 +96,4 @@
     display: none; 
 }
 
-@media (max-width: 768px) {
-    .tab-nav {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .tab-btn {
-        width: 100%;
-        margin-bottom: 10px;
-        font-size: 0.9rem;
-    }
-
-    .tab-dropdown {
-        display: inline-block; 
-    }
-
-    .tab-nav .tab-btn {
-        display: none; 
-    }
-    
-    .flex-align {
-        flex-direction: column; 
-        align-items: flex-start; 
-    }
-
-    .flex-align span {
-        margin-right: 0; 
-        margin-bottom: 0.5rem; 
-    }
-
-    button {
-        width: 100%; 
-        margin-top: 0.5rem; 
-    }
-}
 

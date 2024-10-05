@@ -1,4 +1,4 @@
-const version = 0.70;
+const version = 0.71;
 const versionDisplay = document.getElementById('version');
 const infoDisplay = document.getElementById('information');
 const dataDisplay = document.getElementById('player-card-container');
@@ -148,9 +148,10 @@ function retrieveData(initcall){
             _globals.season = memberData.gameDate.season;
 
             document.getElementById('game-date').innerHTML = `
+            Season: ${_globals.season},
             Round: ${_globals.round}, 
-            Day: ${_globals.day}, 
-            Season: ${_globals.season}`;
+            Day: ${_globals.day}
+            `;
             // console.log(_globals.season)
 
             // Assuming MEMBER_DATA is populated
@@ -389,6 +390,8 @@ function weightSuggestion(weight){
     else return 'Forward or Back';
 }
 
+
+// This name is misleading it is for the tabs titles mainly
 function logClubData() {
     infoContainer.style.display = 'block';
     versionDisplay.innerHTML = `<span><h4 class='physicals'>Version : ${version}</h4></span> <span><h3 id="refresh">↻ <small>Refresh</small> </h3></span>`
@@ -482,7 +485,7 @@ function logTeamData() {
                         <span class='physicals'>${element.weight}kg | ${element.height}cm | ${getEmoji('aggression', element.aggression)} | ${getEmoji('discipline', element.discipline)}</span> 
                     </div>
                 </div>
-                <div class='physicals'>
+                <div class='skills'>
                     Stamina: ${colorizeNumber(element.stamina)} | Handling: ${colorizeNumber(element.handling)} | Attack: ${colorizeNumber(element.attack)} 
                     | Defense: ${colorizeNumber(element.defense)} | Technique: ${colorizeNumber(element.technique)} | Strength: ${colorizeNumber(element.strength)}
                     | Jumping: ${colorizeNumber(element.jumping)} | Speed: ${colorizeNumber(element.speed)} | Agility: ${colorizeNumber(element.agility)} | Kicking: ${colorizeNumber(element.kicking)}
@@ -498,15 +501,16 @@ function logTeamData() {
     dataDisplayAvg.style.marginTop = '10px';
     dataDisplayAvg.innerHTML = `
         <div class='card' style='text-align:center;'>
-            <div>Team Averages | <span class='age'> ${Math.floor(age / avg)}.yo</span> | <span class='form'>Form: ${Math.floor(totalFrom / avg)}</span> | <span class='energy'>Energy: ${isPremium ? Math.floor((totalEnergy/10) / avg) : Math.floor((totalEnergy) / avg) } </span>
+            <div class="team-avg-title-text">Team Averages</div>
+            <div><span class='age'> ${Math.floor(age / avg)}.yo</span> | <span class='form'>Form: ${Math.floor(totalFrom / avg)}</span> | <span class='energy'>Energy: ${isPremium ? Math.floor((totalEnergy/10) / avg) : Math.floor((totalEnergy) / avg) } </span>
             | <span class='csr'>CSR: ${Math.floor(csr / avg).toLocaleString()}</span>| <span class='performance'>Performance Rating: ${isPremium ? Math.floor((totalEnergy/10) / 2 + totalFrom) / avg : Math.floor((totalEnergy / 2 + totalFrom) / avg )}</span></div>
             <div>
                 <span class='physicals'>${Math.floor(totalKG / avg)}kg | ${Math.floor(totalCM / avg)}cm | ${getEmoji('aggression', Math.floor(agro / avg))} | ${getEmoji('discipline', Math.floor(disc / avg))}</span>
             </div>
-            <span class='physicals'>Stamina: ${Math.floor(stam / avg)} | Handling: ${Math.floor(hand / avg)} | Attack: ${Math.floor(att / avg)}
-                | Defense: ${Math.floor(def / avg)} | Technique: ${Math.floor(tech / avg)} | Strength: ${Math.floor(str / avg)}
-                | Jumping: ${Math.floor(jump / avg)} | Speed: ${Math.floor(spee / avg)} | Agility: ${Math.floor(agi / avg)} 
-                | Kicking: ${Math.floor(kick / avg)}</span>
+            <span class='skills'>Stamina: ${colorizeNumber(Math.floor(stam / avg))} | Handling: ${colorizeNumber(Math.floor(hand / avg))} | Attack: ${colorizeNumber(Math.floor(att / avg))}
+                | Defense: ${colorizeNumber(Math.floor(def / avg))} | Technique: ${colorizeNumber(Math.floor(tech / avg))} | Strength: ${colorizeNumber(Math.floor(str / avg))}
+                | Jumping: ${colorizeNumber(Math.floor(jump / avg))} | Speed: ${colorizeNumber(Math.floor(spee / avg))} | Agility: ${colorizeNumber(Math.floor(agi / avg))} 
+                | Kicking: ${colorizeNumber(Math.floor(kick / avg))}</span>
         </div>`;
     
         sortListDiplay.innerHTML = `
@@ -606,26 +610,28 @@ function displayClubandManagerInfo() {
         </div>`;
 
     clubInfo.innerHTML = `<div class='card'>
-            <div class='flex-align'>
-                <span>Name: ${name} | <span class='physicals'>'${nickname_1}'</span>
-                    <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/>
-                </span>
-                <span>Bank: ${formattedBalance}</span>
+            <div class="club-name-title">
+            Name: ${name} | <span class='physicals'>'${nickname_1}'
+            <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/>
+            </div>
+            <hr/>
+            <br>
+            <div>
+            Bank: ${formattedBalance}
+             | Team Salaries: <span class='red'>$${Number(total_salary).toLocaleString()}
             </div>
             <br>
-            <div class='flex-align'>
-                <span>Rankings: <span class='${ranking_points > prev_ranking_points ? 'green' : 'red'}'>${ranking_points} ${ratingPointsMovement} | ${(ranking_points - prev_ranking_points).toFixed(4)}</span></span>
-                <span>Members: ${members} | <span class='physicals'>${getEmoji('contentment', contentment)}</span></span>
-            </div>
-            <div class='flex-align'>
-                <span>Regional: ${regional_rank}</span>
-                <span>Sponsors: ${minor_sponsors}</span>
-            </div> 
-            <div class='flex-align'>
-                <span>National: ${national_rank}</span>
-                <span>Team Salaries: <span class='red'>$${Number(total_salary).toLocaleString()}</span></span>
-            </div>
-            World: ${world_rank}
+            <div>Members: ${members} | <span class='physicals'>${getEmoji('contentment', contentment)}</div>
+            <div>Sponsors: ${minor_sponsors}</div>
+            <br>
+            <div>
+            Rankings: <span class='${ranking_points > prev_ranking_points ? 'green' : 'red'}'>${ranking_points} ${ratingPointsMovement} | ${(ranking_points - prev_ranking_points).toFixed(4)}</span></div>
+            <div>Regional: ${regional_rank}</div>
+            <div>National: ${national_rank}</div>
+            <div>World: ${world_rank}</div>
+            
+            
+            
         </div>`;
 
     settingsInfo.innerHTML = `
