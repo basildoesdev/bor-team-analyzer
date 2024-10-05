@@ -204,7 +204,7 @@ async function retrieveData(initcall) {
     }
 }
 
-import { retrieveData, fetchRugbyData } from "./fetchApi.js";
+// import { retrieveData, fetchRugbyData } from "./fetchApi.js";
 
 // Fetch using a different type with additional params
 
