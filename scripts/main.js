@@ -553,7 +553,8 @@ function displayClubandManagerInfo() {
             </div>
             <hr/>
             <br>
-            <div>Bank: ${formattedBalance} | Team Salaries: <span class='red'>$${Number(total_salary).toLocaleString()}</span></div>
+            <div>Bank: ${formattedBalance}</div>
+            <div>Team Salaries: <span class='red'>$${Number(total_salary).toLocaleString()}</span></div>
             <br>
             <div>Members: ${members} | ${getEmoji('contentment', contentment)}</div>
             <div>Sponsors: ${minor_sponsors}</div>
