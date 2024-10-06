@@ -75,6 +75,7 @@
 #sort-list-display {
     display: flex;
     justify-content: center;
+    margin-bottom: 5px;
 }
 
 .sort-tab-dropdown {
