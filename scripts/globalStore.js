@@ -1,4 +1,4 @@
-export const version = 0.9;
+export const version = 1.0;
 export const versionDisplay = document.getElementById('version');
 export const infoDisplay = document.getElementById('information');
 export const dataDisplay = document.getElementById('player-card-container');
@@ -26,7 +26,7 @@ export const settingsInfo = document.getElementById('settings-infos');
 
 export let globals = {
     PLAYER_DATA: [], CLUB_DATA: [], MEMBER_DATA: [], PLAYER_STATISTICS_DATA: [], _mainKey: 0, _memberid: 0, _teamid: 0,
-    _globals: {season: 0, round: 0, day: 0,}, refresh: 0, isPremium: false, 
+    _globals: {season: 0, round: 0, day: 0,}, refresh: 0, isPremium: false, totalWeightsSum: 0,
 
 }
 

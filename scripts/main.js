@@ -2,6 +2,8 @@ import { globals, submitBtn, accessKey, isSaveKey, keyValidDisplay,} from "./glo
 import { retrieveData } from "./fetchFunctions.js";
 import { sortPlayers } from "./uiFunctions.js";
 import { trimKey, checkSaveKeyInput, saveNewKeyandRefresh } from "./keyFunctions.js";
+import { resetSliders} from "./settingsUiFunctions.js";
+
 
 // Save key if checkbox is checked
 submitBtn.addEventListener('click', () => {
@@ -11,6 +13,8 @@ submitBtn.addEventListener('click', () => {
 // Initialize on window load
 window.onload = () => {
     let savedKey = localStorage.getItem('key');
+    // loadSavedPositionWeights();
+    // setRanges();
     if (savedKey) {
         globals._mainKey = savedKey.slice(-40);
         retrieveData(true);
@@ -62,5 +66,21 @@ window.sortPlayers = sortPlayers;
 window.checkSaveKeyInput = checkSaveKeyInput;
 window.saveNewKeyandRefresh = saveNewKeyandRefresh;
 window.retrieveData = retrieveData;
+window.resetSliders = resetSliders;
 
+document.querySelectorAll('.tab-btn').forEach(tab => {
+    tab.addEventListener('click', function() {
+        const activeTabId = this.id; // Assuming tab buttons have unique IDs
+        localStorage.setItem('activeTab', activeTabId); // Store active tab ID
+    });
+});
 
+window.addEventListener('load', function() {
+    const savedTabId = localStorage.getItem('activeTab'); // Get saved tab ID
+    if (savedTabId) {
+        document.getElementById(savedTabId).click(); // Simulate a click on the saved tab to restore it
+    } else {
+        // Optionally, handle the default case (if nothing is saved)
+        document.getElementById('tab-2-btn').click(); // Click the default tab
+    }
+});

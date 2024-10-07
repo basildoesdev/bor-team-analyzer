@@ -1,6 +1,8 @@
 import { globals } from "./globalStore.js";
 
-export const positionWeights = {
+export let positionWeights = 0;
+
+export let defaultPositionWeights = {
     'Looshead Prop': { 
         'Weight': 1.11, 'Height': 0.51, 'Stamina': 1.00, 'Attack': 0.71, 'Technique': 1.01, 
         'Jumping': 0.51, 'Agility': 0.61, 'Handling': 0.91, 'Defense': 1.01, 'Strength': 1.12, 
@@ -36,7 +38,12 @@ export const positionWeights = {
         'Jumping': 0.71, 'Agility': 0.62, 'Handling': 0.81, 'Defense': 1.01, 'Strength': 1, 
         'Speed': 0.61, 'Kicking': 0.00
     },
-    'Kicker': { 
+    'Scrum Half': { 
+        'Weight': 0.46, 'Height': 0.46, 'Stamina': 1.00, 'Attack': 0.93, 'Technique': 0.64, 
+        'Jumping': 0.31, 'Agility': 0.93, 'Handling': 0.93, 'Defense': 0.93, 'Strength': 0.56, 
+        'Speed': 0.92, 'Kicking': 0.93
+    },
+    'Fly Half': { 
         'Weight': 0.46, 'Height': 0.46, 'Stamina': 1.00, 'Attack': 0.93, 'Technique': 0.64, 
         'Jumping': 0.31, 'Agility': 0.93, 'Handling': 0.93, 'Defense': 0.93, 'Strength': 0.56, 
         'Speed': 0.92, 'Kicking': 0.93
@@ -50,10 +57,25 @@ export const positionWeights = {
         'Weight': 0.51, 'Height': 0.51, 'Stamina': 1.00, 'Attack': 1.02, 'Technique': 0.61, 
         'Jumping': 0.26, 'Agility': 1.02, 'Handling': 1.02, 'Defense': 1.02, 'Strength': 0.70, 
         'Speed': 1.02, 'Kicking': 0.31
+    },
+    'Fullback': { 
+        'Weight': 0.51, 'Height': 0.51, 'Stamina': 1.00, 'Attack': 1.02, 'Technique': 0.61, 
+        'Jumping': 0.26, 'Agility': 1.02, 'Handling': 1.02, 'Defense': 1.02, 'Strength': 0.70, 
+        'Speed': 1.02, 'Kicking': 0.31
     }
 };
 
-function checkPositionWeights(positionWeights) {
+if (localStorage.getItem('positionWeights')){
+    // console.log('applued logged weights')
+    positionWeights = JSON.parse(localStorage.getItem('positionWeights'))
+}else{
+    positionWeights = defaultPositionWeights;
+}
+// console.log(positionWeights)
+
+
+
+export function checkPositionWeights(positionWeights) {
     for (let position in positionWeights) {
         const total = Object.values(positionWeights[position]).reduce((sum, val) => sum + val, 0);
         if (total !== 9) {
@@ -63,6 +85,8 @@ function checkPositionWeights(positionWeights) {
         }
     }
 }
+
+// checkPositionWeights(positionWeights);
 
 function scorePositions(playerStats, weights, position, actualWeight, actualHeight) {
     const propHeightCheck = ['Tighthead Prop', 'Looshead Prop'].includes(position) && actualHeight > minHeightWeight.Prop.maxHeight;

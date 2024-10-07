@@ -39,6 +39,6 @@ export function checkSaveKeyInput(){
 export function saveNewKeyandRefresh() {
     const _accessKey = document.getElementById('settings-api-key').value;
     localStorage.setItem('key', _accessKey);
-    retrieveData(true);
+    window.location.reload();
 }
 

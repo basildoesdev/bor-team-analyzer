@@ -46,7 +46,7 @@ export async function retrieveData(initcall) {
     }
 
     form.style.display = 'none';
-    infoDisplay.innerHTML = `<h3 style="margin-top:20px;"> Requesting...</h3>`;
+    infoDisplay.innerHTML = `<h3 style="margin-top:20px;"> Working...</h3>`;
 
     try {
         const memberData = await fetchRugbyData('m', { memberid: globals._memberid });

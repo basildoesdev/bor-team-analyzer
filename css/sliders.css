@@ -1,0 +1,59 @@
+
+.styled-slider {
+    -webkit-appearance: none; 
+    width: 60%; 
+    height: 15px; 
+    background: #3d3d3d; 
+    border-radius: 50px; 
+    outline: none; 
+}
+
+.styled-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; 
+    appearance: none; 
+    width: 15px;
+    height: 15px; 
+    background: #0563bb; 
+    border: 2px solid #b8b7b7; 
+    border-radius: 50%;
+    cursor: pointer; 
+}
+
+.styled-slider:hover::-webkit-slider-thumb {
+    background: #014381; 
+}
+
+.styled-slider:active::-webkit-slider-thumb {
+    background: #0202a0; 
+}
+
+.styled-slider::-webkit-slider-runnable-track {
+    background: #555454; 
+    border-radius: 15px;
+    
+}
+
+.styled-slider:hover::-webkit-slider-runnable-track {
+    background: #cccccc; 
+    border-radius: 15px;
+    
+}
+
+/* Styles for the slider thumb in Firefox */
+.styled-slider::-moz-range-thumb {
+    width: 15px; 
+    height: 15px; 
+    background: #0563bb; 
+    border: 2px solid #555454; 
+    border-radius: 50%; 
+    cursor: pointer; 
+}
+
+/* For Firefox */
+.styled-slider::-moz-range-track {
+    background: #555454; 
+}
+
+.styled-slider:hover::-moz-range-track {
+    background: #cccccc; 
+}

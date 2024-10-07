@@ -166,8 +166,17 @@ input[type="text"] {
     margin-bottom: 3px;
 }
 
-
-
-
-
+.hide-show-button{
+    /* display: none; */
+    color:yellowgreen;
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+.slider-container{
+    display: none;
+}
+.default-weights:hover, .hide-show-button:hover{
+    color:#02750c;
+    cursor: pointer;
+}
 

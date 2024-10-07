@@ -9,6 +9,9 @@ import { retrieveData } from "./fetchFunctions.js";
 import { normalizeValue } from "./helpersFunctions.js";
 import { suggestedPosition, weightSuggestion, calculatePerformance, evaluatePlayerPosition,  } from "./algorithmFunctions.js";
 
+// import { positionWeights } from "./algorithmFunctions.js";
+import { getSettingsInfo, setRanges, loadSavedPositionWeights } from "./settingsUiFunctions.js";
+
 export function logClubData() {
     infoContainer.style.display = 'block';
     versionDisplay.innerHTML = `<span><h4 class='physicals'>Version : ${version}</h4></span> <span><h3 id="refresh">↻ <small>Refresh</small> </h3></span>`
@@ -18,7 +21,10 @@ export function logClubData() {
     globals.refresh.addEventListener('click', () => {
         dataDisplay.innerHTML = '';
         dataDisplayAvg.innerHTML = '';
-        retrieveData(false);
+        loadSavedPositionWeights();
+        setRanges();
+        window.location.reload();
+        
     });
 
     const [{ username }] = globals.MEMBER_DATA;
@@ -209,36 +215,7 @@ export function displayClubandManagerInfo() {
         </div>`;
 
     settingsInfo.innerHTML = getSettingsInfo();
-}
-
-export function getSettingsInfo(){
-    return `<div class='card'>
-            <div class='flex-align'>
-                <span>
-                    <label for="settings-api-key" aria-label="Enter API Key">API Key</label>
-                    <input type="text" id="settings-api-key" oninput="checkSaveKeyInput()">
-                </span>
-                <span>
-                    <button id="settings-api-save" onclick='saveNewKeyandRefresh()' disabled="true" style="background-color:#5e5d5d;"> Save </button>
-                </span>
-            </div>
-        </div>
-        <div class='card'>
-        🪲 Bug? pm yaya <a href='https://www.blackoutrugby.com/game/me.office.php#page=mail&newmessage=1&folder=1&tab=inbox target="_blank"'>here</a>
-        </div>
-        <div class='card'>
-            <div class='flex-align'>
-                <span>WIP Items</span>
-                <span>(Version ${version})</span>
-            </div>
-            <div class='physicals'>
-                <div>Min Prop Weight & Height ✅</div>
-                <div>Min Hooker Weight & Height ✅</div>
-                <div>Min Lock Height ✅</div>
-                <div>Positional skill algorithm ✅</div>
-                <div>Squad sort ✅</div>
-            </div>
-        </div>`
+    setRanges();
 }
 
 function getPremiumInfoLink() {
