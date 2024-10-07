@@ -46,7 +46,7 @@ export async function retrieveData(initcall) {
     }
 
     form.style.display = 'none';
-    infoDisplay.innerHTML = `<h3 style="margin-top:20px;"> Working...</h3>`;
+    infoDisplay.classList.remove('hide')
 
     try {
         const memberData = await fetchRugbyData('m', { memberid: globals._memberid });
@@ -60,10 +60,6 @@ export async function retrieveData(initcall) {
         };
         
         globals.MEMBER_DATA[0].premium == '1' ? globals.isPremium = true : globals.isPremium = false;
-        
-        document.getElementById('game-date').innerHTML = `
-            Season: ${globals._globals.season}, Round: ${globals._globals.round}, Day: ${globals._globals.day}
-        `;
 
         const clubData = await fetchRugbyData('t', { teamid: globals._teamid });
         globals.CLUB_DATA = Object.values(clubData.teams);
@@ -84,7 +80,7 @@ export async function retrieveData(initcall) {
         displayClubandManagerInfo();
         logClubData();
 
-        infoDisplay.innerHTML = '';
+        infoDisplay.classList.add('hide');
     } catch (error) {
         console.error('Error during fetch operations:', error);
     }

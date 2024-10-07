@@ -1,4 +1,5 @@
 export const version = 1.0;
+export const versionTop = document.getElementById('version-title-dispaly');
 export const versionDisplay = document.getElementById('version');
 export const infoDisplay = document.getElementById('information');
 export const dataDisplay = document.getElementById('player-card-container');

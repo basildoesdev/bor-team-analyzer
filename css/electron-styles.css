@@ -1,16 +1,57 @@
 .title-bar {
+    position: fixed;
     display: flex;
+    width: 99%;
     justify-content: space-between;
     align-items: center;
     background-color: #333;
     color: white;
     padding: 10px;
+    border-bottom: 2px solid red;
+    -webkit-app-region: drag; /* Makes the title bar draggable */
 }
 
-.title-bar-controls button {
+.refresh{
+    position: relative;
+    /* left:85%; */
+    color: #af9d9d;
+}
+.hide{
+    display: none;
+}
+.align-btn-refresh{
+    display: flex;
+    align-items: center;
+}
+
+.title-bar-controls {
+    display: flex;
     background: none;
     border: none;
     color: white;
     cursor: pointer;
     margin-left: 10px;
+}
+
+.title-bar-controls button{
+    padding: 5px;
+    margin: 2px;
+    border-radius: 50%;
+    height:15px;
+    width:15px;
+    font-size: x-small;
+    -webkit-app-region: no-drag; /* Prevents buttons from being draggable */
+
+}
+
+.title-bar-controls button:first-child{
+    background-color: rgb(61, 247, 24);
+}
+
+.title-bar-controls button:nth-child(2) {
+    background-color: rgb(247, 158, 24);
+}
+
+.title-bar-controls button:last-child {
+    background-color: rgb(247, 24, 24);
 }

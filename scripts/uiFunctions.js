@@ -13,12 +13,20 @@ import { suggestedPosition, weightSuggestion, calculatePerformance, evaluatePlay
 import { getSettingsInfo, setRanges, loadSavedPositionWeights } from "./settingsUiFunctions.js";
 
 export function logClubData() {
-    infoContainer.style.display = 'block';
-    versionDisplay.innerHTML = `<span><h4 class='physicals'>Version : ${version}</h4></span> <span><h3 id="refresh">↻ <small>Refresh</small> </h3></span>`
+    infoContainer.classList.remove('hide');
+    let gameDateDisplay = document.getElementById('game-date');
+    gameDateDisplay.innerHTML = `
+            Season: ${globals._globals.season}, Round: ${globals._globals.round}, Day: ${globals._globals.day}
+        `;
+    gameDateDisplay.classList.remove('hide');
     
-    globals.refresh = document.getElementById('refresh');
+
+    // versionDisplay.innerHTML = `<span><h4 class='physicals'>Version : ${version}</h4></span> <span><h3 id="refresh">↻ <small>Refresh</small> </h3></span>`
+    let refresh = document.getElementById('refresh');
+    refresh.classList.remove('hide');
+    refresh = document.getElementById('refresh');
     
-    globals.refresh.addEventListener('click', () => {
+    refresh.addEventListener('click', () => {
         dataDisplay.innerHTML = '';
         dataDisplayAvg.innerHTML = '';
         loadSavedPositionWeights();
@@ -137,7 +145,7 @@ export function logTeamData() {
                 | Kicking: ${colorizeNumber(Math.floor(kick / avg))}</span>
         </div>`;
     
-        sortListDiplay.innerHTML = `
+        sortListDiplay.innerHTML = `<div class='card'>
                 <select id="sortOption" class="sort-tab-dropdown" onchange="sortPlayers()">
                     <option value="name">Name</option>
                     <option value="csr" selected>CSR</option>
@@ -157,7 +165,7 @@ export function logTeamData() {
                     <option value="speed">Speed</option>
                     <option value="agility">Agility</option>
                     <option value="kicking">Kicking</option>
-                </select>`;
+                </select></div>`;
 }
 
 export function sortPlayers() {

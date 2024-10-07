@@ -3,5 +3,6 @@ index.js
 *.json
 forge.config.js
 preload.js
-electronScripts.js
+render.js
+main.js
 out/

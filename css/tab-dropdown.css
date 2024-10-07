@@ -1,8 +1,11 @@
 .tab-nav {
     display: flex;
-    justify-content: space-evenly;
     margin-bottom: 20px;
     width: 100%;
+    align-content: center;
+    max-width: 92%;
+    flex-direction: row;
+    align-self: center;
 }
 
 .tab-btn {
@@ -54,11 +57,29 @@
     border-right: 2px solid var(--accent-color);
     border-left: 2px solid var(--accent-color);
     
+    
 }
 
-.tab-dropdown, .sort-tab-dropdown {
+.tab-dropdown {
     display: inline-block;
     width: 100%;
+    padding: 12px 15px;
+    background-color: #333;
+    color: #fff;
+    font-size: 1rem;
+    border: 1px solid #555;
+    border-radius: 5px;
+    appearance: none;  
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"><path d="M12 5.5L8 9.5 4 5.5"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+}
+
+.sort-tab-dropdown {
+    margin-bottom: 5px;
+    width: 100%;
+    display: inline-block;
     padding: 12px 15px;
     background-color: #333;
     color: #fff;
@@ -76,11 +97,6 @@
     display: flex;
     justify-content: center;
     margin-bottom: 5px;
-}
-
-.sort-tab-dropdown {
-    margin-bottom: 5px;
-    width: 100%;
 }
 
 .tab-dropdown option, .sort-tab-dropdown option {

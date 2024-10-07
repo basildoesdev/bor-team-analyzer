@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"/>
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"/> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./images/leaf.png" type="image/x-icon">
+    <link rel="icon" href="./assets/icons/leaf.png" type="image/x-icon">
     <title id="team1">Basil | BoR Team Analyzer</title>
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
@@ -14,14 +20,21 @@
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
-    <!-- <div class="title-bar">
-        <h1>Your App</h1>
-        <div class="title-bar-controls">
-            <button id="minimize">_</button>
-            <button id="maximize">[]</button>
-            <button id="close">X</button>
+    <div class="title-bar">
+        <div>
+            <p id="title">BoR Team Analyser   <span class="physicals" id="version-title-dispaly"></span></p>
         </div>
-    </div> -->
+        <div id="game-date" class="hide game-date">
+        </div>
+        <div class="align-btn-refresh">
+        <span><h3 id="refresh" class="refresh hide">↻ <small>Refresh</small> </h3></span>
+        <div class="title-bar-controls">
+            <button id="minimize"></button>
+            <button id="maximize"></button>
+            <button id="close"></button>
+        </div>
+        </div>
+    </div>
     <div id="team-analyzer-form">
         <h2 class="app-title"> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer</h2>
         <div class="input-container">
@@ -38,11 +51,12 @@
         </div>
         <button id="submit" onclick="retrieveData()">Submit</button>
     </div>
-    <p id="information"></p>
-    <div id="info-container" class="container">
-        <div id="version"></div>
-        <h2 class="app-title"> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer: </h2>
-        <div id="game-date" style="text-align:center;"></div>
+    <p id="information" class="loader hide"></p>
+    <div id="info-container" class="container hide">
+        
+        <!-- <div id="version"></div>
+        <h2 class="app-title"> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer: </h2> -->
+        <!-- <div id="game-date" style="text-align:center;"></div> -->
 
         <nav class="tab-nav">
             <button id="tab-1-btn" class="tab-btn" onclick="showTab(1)">Tab 1</button>
@@ -80,5 +94,5 @@
 
 </body>
 <script type="module" src="scripts/main.js"></script>
-<!-- <script type="module" src="electronScripts.js"></script> -->
+<script type="module" src="renderer.js"></script>
 </html>

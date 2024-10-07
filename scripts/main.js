@@ -1,10 +1,10 @@
-import { globals, submitBtn, accessKey, isSaveKey, keyValidDisplay,} from "./globalStore.js"; 
+import { globals, submitBtn, accessKey, isSaveKey, keyValidDisplay, versionTop, version} from "./globalStore.js"; 
 import { retrieveData } from "./fetchFunctions.js";
 import { sortPlayers } from "./uiFunctions.js";
 import { trimKey, checkSaveKeyInput, saveNewKeyandRefresh } from "./keyFunctions.js";
 import { resetSliders} from "./settingsUiFunctions.js";
 
-
+versionTop.innerHTML = ` Version  <span style='font-size:small;'>( ${version} )</span>`;
 // Save key if checkbox is checked
 submitBtn.addEventListener('click', () => {
     if (isSaveKey.checked) localStorage.setItem('key', accessKey.value);
