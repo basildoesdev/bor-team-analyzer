@@ -84,8 +84,8 @@ export function getSettingsInfo() {
                 Refresh/reload to see updated suggestions on squad sheet
             </div>
             <br>
-            <div id='reload-defaults' onclick="resetSliders()" class='green default-weights'>
-            reload defaults
+            <div  class='green default-weights'>
+            <button onclick="resetSliders()" id='reload-defaults'>reload defaults</button>
             </div>
 
         </div>        
@@ -111,6 +111,7 @@ export function getSettingsInfo() {
                 <div>Deploy Electron distributable</div>
                 <div> Electron window UI </div>
                 <div>Adjustable algorithm weights✅</div>
+                <div>Some positions are copies of others atm (halves, wing and FB)</div>
                 <div>Adjustable min weight and height exclusions</div>
                 <div>Min Prop Weight & Height ✅</div>
                 <div>Min Hooker Weight & Height ✅</div>

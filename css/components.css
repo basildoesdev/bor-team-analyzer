@@ -171,6 +171,7 @@ input[type="text"] {
     color:yellowgreen;
     cursor: pointer;
     font-size: 1.3rem;
+    
 }
 .slider-container{
     display: none;
@@ -178,5 +179,17 @@ input[type="text"] {
 .default-weights:hover, .hide-show-button:hover{
     color:#02750c;
     cursor: pointer;
+}
+
+#reload-defaults{
+    background-color: #5e5d5d;
+    padding: 2px;
+    min-width: 80%;
+    align-items: center;
+
+}
+
+#reload-defaults:hover{
+    background-color: yellowgreen;
 }
 
