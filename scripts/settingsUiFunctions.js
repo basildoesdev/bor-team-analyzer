@@ -108,6 +108,8 @@ export function getSettingsInfo() {
                 <span>(Version ${version})</span>
             </div>
             <div class='physicals'>
+                <div>Deploy Electron distributable</div>
+                <div> Electron window UI </div>
                 <div>Adjustable algorithm weights✅</div>
                 <div>Adjustable min weight and height exclusions</div>
                 <div>Min Prop Weight & Height ✅</div>

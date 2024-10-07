@@ -1,3 +1,7 @@
 node_modules/
 index.js
 *.json
+forge.config.js
+preload.js
+electronScripts.js
+out/
