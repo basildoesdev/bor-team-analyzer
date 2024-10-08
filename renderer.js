@@ -14,3 +14,4 @@ document.getElementById('close').addEventListener('click', () => {
 document.querySelector('.title-bar').addEventListener('mousedown', () => {
     window.electronAPI.dragWindow(); // Use electronAPI instead of electron
 });
+

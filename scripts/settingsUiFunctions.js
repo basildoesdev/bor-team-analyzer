@@ -75,7 +75,7 @@ export function getSettingsInfo() {
     return `
         
         <div class='card'>
-            <h2>Algorithm Weight Adjustments</h2>
+            <h2>Algorithm Weight Adjustments</h2> <span><h3 id="refresh" class="refresh hide">↻ <small>Refresh</small> </h3></span>
             <hr><br>
             <div>
                 Recomended that all totals for each position are the same to get fair and balanced results

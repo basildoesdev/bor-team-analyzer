@@ -1,8 +1,8 @@
 node_modules/
 index.js
+renderer.js
 *.json
 forge.config.js
 preload.js
-render.js
 main.js
 out/

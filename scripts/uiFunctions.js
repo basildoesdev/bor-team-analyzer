@@ -24,7 +24,6 @@ export function logClubData() {
     // versionDisplay.innerHTML = `<span><h4 class='physicals'>Version : ${version}</h4></span> <span><h3 id="refresh">↻ <small>Refresh</small> </h3></span>`
     let refresh = document.getElementById('refresh');
     refresh.classList.remove('hide');
-    refresh = document.getElementById('refresh');
     
     refresh.addEventListener('click', () => {
         dataDisplay.innerHTML = '';
@@ -58,6 +57,8 @@ export function logClubData() {
     applyContent(option3Name, squadCount);
     applyContent(option4Name, settingsLabel);
 }
+
+
 
 export function logTeamData() {
     dataDisplay.innerHTML = '';
