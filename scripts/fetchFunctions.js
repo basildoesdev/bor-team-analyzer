@@ -31,11 +31,12 @@ async function fetchRugbyData(request_type, additionalParams = {}) {
         if (data.status === 'Ok') {
             return data;  
         } else {
-            throw new Error(data.error || 'Unknown error occurred');
+            // throw new Error(data.error || 'Unknown error occurred');
         }
     } catch (error) {
-        console.error('Error:', error);
-        badKeyDay();
+        console.log('Error:', error);
+        // badKeyDay();
+        return data
         throw error;  
     }
 }
@@ -66,6 +67,16 @@ export async function retrieveData(initcall) {
         const clubData = await fetchRugbyData('t', { teamid: globals._teamid });
         globals.CLUB_DATA = Object.values(clubData.teams);
 
+        const clubTrophyData = await fetchRugbyData('trph', {teamid: globals._teamid})
+        if(clubTrophyData != undefined){
+            globals.CLUB_DATA[0].trophies = Object.values(clubTrophyData.trophies);
+            globals.trophies = true;
+        }else{
+            console.log('no trophies');
+            globals.trophies = false;
+        }
+        
+
         const playerData = await fetchRugbyData('p', { teamid: globals._teamid });
         globals.PLAYER_DATA = Object.values(playerData.players).sort((a, b) => b.csr - a.csr);
 
@@ -73,9 +84,10 @@ export async function retrieveData(initcall) {
         globals.PLAYER_STATISTICS_DATA = Object.values(playerStatisticsData['player statistics']);
 
         const lastFixtureData = await fetchRugbyData('f', { teamid: globals._teamid, last: 4 });
-
+        globals.CLUB_DATA[0].fixtures = Object.values(lastFixtureData.fixtures)
+        // console.log(lastFixtureData);
         
-        // devDataLogs();
+        devDataLogs();
         
         // UI update calls
         logTeamData();

@@ -4,66 +4,55 @@ export let positionWeights = 0;
 
 export let defaultPositionWeights = {
     'Looshead Prop': { 
-        'Weight': 1.11, 'Height': 0.51, 'Stamina': 1.00, 'Attack': 0.71, 'Technique': 1.01, 
-        'Jumping': 0.51, 'Agility': 0.61, 'Handling': 0.91, 'Defense': 1.01, 'Strength': 1.12, 
-        'Speed': 0.50, 'Kicking': 0.00
-    },
+        "Weight": 1.42, "Height": 0.51, "Stamina": 1, "Attack": 0.71, "Technique": 1.34, 
+        "Jumping": 0, "Agility": 0.2, "Handling": 0.91, "Defense": 1.01, "Strength": 1.4, 
+        "Speed": 0.5, "Kicking": 0 },
     'Hooker': { 
-        'Weight': 0.99, 'Height': 0.49, 'Stamina': 1.00, 'Attack': 0.69, 'Technique': 1.02, 
-        'Jumping': 0.49, 'Agility': 0.68, 'Handling': 1.21, 'Defense': 0.95, 'Strength': 0.98, 
-        'Speed': 0.50, 'Kicking': 0.00
-    },
+        "Weight": 1.13, "Height": 0.49, "Stamina": 1, "Attack": 0.69, "Technique": 1.34, 
+        "Jumping": 0, "Agility": 0.3, "Handling": 1.34, "Defense": 0.95, "Strength": 1.26, 
+        "Speed": 0.5, "Kicking": 0 },
     'Tighthead Prop': { 
-        'Weight': 1.14, 'Height': 0.52, 'Stamina': 1.00, 'Attack': 0.73, 'Technique': 1.01, 
-        'Jumping': 0.52, 'Agility': 0.61, 'Handling': 0.83, 'Defense': 1.01, 'Strength': 1.13, 
-        'Speed': 0.50, 'Kicking': 0.00
-    },
+        "Weight": 1.4, "Height": 0.52, "Stamina": 1, "Attack": 0.73, "Technique": 1.35, 
+        "Jumping": 0, "Agility": 0.2, "Handling": 0.83, "Defense": 1.01, "Strength": 1.46, 
+        "Speed": 0.5, "Kicking": 0 },
     'Lock': { 
-        'Weight': 0.90, 'Height': 1.03, 'Stamina': 1.00, 'Attack': 0.55, 'Technique': 0.84, 
-        'Jumping': 1.03, 'Agility': 0.54, 'Handling': 0.94, 'Defense': 0.80, 'Strength': 0.94, 
-        'Speed': 0.43, 'Kicking': 0.00
-    },
+        "Weight": 0.9, "Height": 1.03, "Stamina": 1, "Attack": 0.55, "Technique": 0.84, 
+        "Jumping": 1.26, "Agility": 0.2, "Handling": 1.05, "Defense": 0.8, "Strength": 0.94, 
+        "Speed": 0.43, "Kicking": 0 },
     'Blindside Flanker': { 
-        'Weight': 0.96, 'Height': 0.72, 'Stamina': 1.00, 'Attack': 0.67, 'Technique': 0.96, 
-        'Jumping': 0.77, 'Agility': 0.66, 'Handling': 0.77, 'Defense': 0.96, 'Strength': 0.96, 
-        'Speed': 0.57, 'Kicking': 0.00
-    },
+        "Weight": 0.96, "Height": 0.72, "Stamina": 1, "Attack": 0.67, "Technique": 0.96, 
+        "Jumping": 0.77, "Agility": 0.53, "Handling": 0.77, "Defense": 1.09, "Strength": 0.96, 
+        "Speed": 0.57, "Kicking": 0 },
     'Openside Flanker': { 
-        'Weight': 0.96, 'Height': 0.67, 'Stamina': 1.00, 'Attack': 0.67, 'Technique': 1.07, 
-        'Jumping': 0.61, 'Agility': 0.67, 'Handling': 0.76, 'Defense': 0.96, 'Strength': 0.96, 
-        'Speed': 0.67, 'Kicking': 0.00
-    },
+        "Weight": 0.96, "Height": 0.67, "Stamina": 1, "Attack": 0.67, "Technique": 1.25, 
+        "Jumping": 0.4, "Agility": 0.53, "Handling": 1.08, "Defense": 0.96, "Strength": 0.96, 
+        "Speed": 0.52, "Kicking": 0 },
     'No.8': { 
-        'Weight': 0.91, 'Height': 0.61, 'Stamina': 1.00, 'Attack': 0.71, 'Technique': 1.01, 
-        'Jumping': 0.71, 'Agility': 0.62, 'Handling': 0.81, 'Defense': 1.01, 'Strength': 1, 
-        'Speed': 0.61, 'Kicking': 0.00
-    },
+        "Weight": 0.91, "Height": 0.61, "Stamina": 1, "Attack": 0.9, "Technique": 1.01, 
+        "Jumping": 0.62, "Agility": 0.62, "Handling": 0.81, "Defense": 1.01, "Strength": 1, 
+        "Speed": 0.51, "Kicking": 0 },
     'Scrum Half': { 
-        'Weight': 0.46, 'Height': 0.46, 'Stamina': 1.00, 'Attack': 0.93, 'Technique': 0.64, 
-        'Jumping': 0.31, 'Agility': 0.93, 'Handling': 0.93, 'Defense': 0.93, 'Strength': 0.56, 
-        'Speed': 0.92, 'Kicking': 0.93
-    },
+        "Weight": 0, "Height": 0, "Stamina": 1, "Attack": 1.31, "Technique": 0.64, 
+        "Jumping": 0, "Agility": 1.33, "Handling": 1.34, "Defense": 1.12, "Strength": 0.56, 
+        "Speed": 1.1, "Kicking": 0.6 },
     'Fly Half': { 
-        'Weight': 0.46, 'Height': 0.46, 'Stamina': 1.00, 'Attack': 0.93, 'Technique': 0.64, 
-        'Jumping': 0.31, 'Agility': 0.93, 'Handling': 0.93, 'Defense': 0.93, 'Strength': 0.56, 
-        'Speed': 0.92, 'Kicking': 0.93
-    },
+        "Weight": 0, "Height": 0, "Stamina": 1, "Attack": 1.19, "Technique": 0.64, 
+        "Jumping": 0, "Agility": 1.08, "Handling": 1.17, "Defense": 1.12, "Strength": 0.56, 
+        "Speed": 0.92, "Kicking": 1.33 },
     'Center': { 
-        'Weight': 0.60, 'Height': 0.50, 'Stamina': 1.00, 'Attack': 1.00, 'Technique': 0.60, 
-        'Jumping': 0.31, 'Agility': 0.90, 'Handling': 1.00, 'Defense': 1.00, 'Strength': 0.80, 
-        'Speed': 0.90, 'Kicking': 0.39
-    },
+        "Weight": 0.35, "Height": 0, "Stamina": 1, "Attack": 1.29, "Technique": 0.6, 
+        "Jumping": 0, "Agility": 1.17, "Handling": 1.2, "Defense": 1.33, "Strength": 0.8, 
+        "Speed": 1.26, "Kicking": 0 },
     'Wing': { 
-        'Weight': 0.51, 'Height': 0.51, 'Stamina': 1.00, 'Attack': 1.02, 'Technique': 0.61, 
-        'Jumping': 0.26, 'Agility': 1.02, 'Handling': 1.02, 'Defense': 1.02, 'Strength': 0.70, 
-        'Speed': 1.02, 'Kicking': 0.31
-    },
+        "Weight": 0, "Height": 0, "Stamina": 1, "Attack": 1.36, "Technique": 0.61, 
+        "Jumping": 0, "Agility": 1.38, "Handling": 1.27, "Defense": 1.31, "Strength": 0.7, 
+        "Speed": 1.37, "Kicking": 0 },
     'Fullback': { 
-        'Weight': 0.51, 'Height': 0.51, 'Stamina': 1.00, 'Attack': 1.02, 'Technique': 0.61, 
-        'Jumping': 0.26, 'Agility': 1.02, 'Handling': 1.02, 'Defense': 1.02, 'Strength': 0.70, 
-        'Speed': 1.02, 'Kicking': 0.31
-    }
-};
+        "Weight": 0, "Height": 0, "Stamina": 1, "Attack": 1.02, "Technique": 0.61, 
+        "Jumping": 0.26, "Agility": 1.14, "Handling": 1.18, "Defense": 1.28, "Strength": 0.43, 
+        "Speed": 1.29, "Kicking": 0.79 }
+  };
+  
 
 if (localStorage.getItem('positionWeights')){
     // console.log('applued logged weights')
@@ -72,8 +61,6 @@ if (localStorage.getItem('positionWeights')){
     positionWeights = defaultPositionWeights;
 }
 // console.log(positionWeights)
-
-
 
 export function checkPositionWeights(positionWeights) {
     for (let position in positionWeights) {

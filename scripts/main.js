@@ -4,13 +4,21 @@ import { sortPlayers } from "./uiFunctions.js";
 import { trimKey, checkSaveKeyInput, saveNewKeyandRefresh } from "./keyFunctions.js";
 import { resetSliders} from "./settingsUiFunctions.js";
 
-versionTop.innerHTML = ` Version  <span style='font-size:small;'>( ${version} )</span>`;
-// Save key if checkbox is checked
+// versionTop.innerHTML = ` Version  <span style='font-size:small;'>( ${version} )</span>`;
+
+window.showTab = showTab;
+window.showTabDropdown = showTabDropdown;
+window.checkKeyInput = checkKeyInput;
+window.sortPlayers = sortPlayers;
+window.checkSaveKeyInput = checkSaveKeyInput;
+window.saveNewKeyandRefresh = saveNewKeyandRefresh;
+window.retrieveData = retrieveData;
+window.resetSliders = resetSliders;
+
 submitBtn.addEventListener('click', () => {
     if (isSaveKey.checked) localStorage.setItem('key', accessKey.value);
 });
 
-// Initialize on window load
 window.onload = () => {
     let savedKey = localStorage.getItem('key');
     // loadSavedPositionWeights();
@@ -21,7 +29,6 @@ window.onload = () => {
     }
 };
 
-// Check if the access key input is valid
 function checkKeyInput() {
     const isValidKey = /^m=(\d+)&mk=([a-fA-F0-9]{40})$/;
     const fullKey = accessKey.value;
@@ -56,38 +63,41 @@ export function showTab(tabNumber) {
 }
 
 export function showTabDropdown(tabNumber) {
-    showTab(tabNumber); // Reuse the same logic
+    showTab(tabNumber); 
 }
-
-window.showTab = showTab;
-window.showTabDropdown = showTabDropdown;
-window.checkKeyInput = checkKeyInput;
-window.sortPlayers = sortPlayers;
-window.checkSaveKeyInput = checkSaveKeyInput;
-window.saveNewKeyandRefresh = saveNewKeyandRefresh;
-window.retrieveData = retrieveData;
-window.resetSliders = resetSliders;
 
 document.querySelectorAll('.tab-btn').forEach(tab => {
     tab.addEventListener('click', function() {
-        const activeTabId = this.id; // Assuming tab buttons have unique IDs
-        localStorage.setItem('activeTab', activeTabId); // Store active tab ID
+        const activeTabId = this.id; 
+        localStorage.setItem('activeTab', activeTabId); 
     });
 });
 
 window.addEventListener('load', function() {
-    const savedTabId = localStorage.getItem('activeTab'); // Get saved tab ID
+    const savedTabId = localStorage.getItem('activeTab'); 
     if (savedTabId) {
-        document.getElementById(savedTabId).click(); // Simulate a click on the saved tab to restore it
+        document.getElementById(savedTabId).click(); 
     } else {
-        // Optionally, handle the default case (if nothing is saved)
-        document.getElementById('tab-2-btn').click(); // Click the default tab
+        document.getElementById('tab-2-btn').click();
     }
 });
 
-fetch('/netlify/functions/getKey.js')
-  .then(response => response.json())
-  .then(data => {
-    console.log(data.DEVKEY); // Access the key here
-  })
-  .catch(error => console.error('Error fetching key:', error));
+
+let backToTopButton = document.getElementById("backToTop");
+
+
+window.onscroll = function() { scrollFunction() };
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    backToTopButton.style.display = "block";
+  } else {
+    backToTopButton.style.display = "none";
+  }
+}
+
+// Scroll to the top of the page when the button is clicked
+backToTopButton.onclick = function() {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE, and Opera
+};

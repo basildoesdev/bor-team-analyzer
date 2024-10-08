@@ -6,7 +6,7 @@ import { version, versionDisplay,
     managerInfo, clubInfo, settingsInfo, globals } from "./globalStore.js"; 
 
 import { retrieveData } from "./fetchFunctions.js";    
-import { normalizeValue } from "./helpersFunctions.js";
+import { normalizeValue, trimFirstLast } from "./helpersFunctions.js";
 import { suggestedPosition, weightSuggestion, calculatePerformance, evaluatePlayerPosition,  } from "./algorithmFunctions.js";
 
 // import { positionWeights } from "./algorithmFunctions.js";
@@ -107,13 +107,14 @@ export function logTeamData() {
         const suggestedPos = suggestedPosition(playerStats, actual_weight, actual_height);
         // console.log(element.name);
         dataDisplay.innerHTML += `
-            <div class='card'>
-                <div>${i + 1}) <span class='name'>${element.name}</span><img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${element.nationality.toLowerCase()}.gif'/></span> 
+            <div class='card parent'>
+                <div class='red injury'>${isDateInPast(element.injured) ? " ❗ Injured until: " + formatDateString(element.injured) + " ❗": " "} </div>
+                <div class='blue'>${element.listed ? "💲 Current Price: $" + Number(element.price).toLocaleString() + "  |  Deadline: " + formatDateString(element.listed) + " 💲": " "} </div>
+                <div class='child'>${i + 1}) <span class='name'>${element.name}</span><img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${element.nationality.toLowerCase()}.gif'/></span> 
                     | <span class='age'> ${element.age}.yo </span>
                     | <span class='form'>Form: ${element.form}</span> | <span class='energy'>Energy: ${globals.isPremium ? element.energy/10 : element.energy} </span>
                     | <span class='csr'> CSR: ${Number(element.csr).toLocaleString()}</span> | <span class='performance'>
                     Performance Rating: ${globals.isPremium? element.form + ((element.energy/10)/2) : element.form + (element.energy/2)} (${globals.isPremium ? (element.form + (element.energy/10) / 2 + element.csr / 1000).toFixed(0) : (element.form + element.energy / 2 + element.csr / 1000).toFixed(0)})</span>
-                    <div class='red'>${isDateInPast(element.injured) ? " ❗ Injured until: " + formatDateString(element.injured) + " ❗": " "} </div>
                     <div>
                         <span class='physicals'>${element.weight}kg | ${element.height}cm | ${getEmoji('aggression', element.aggression)} | ${getEmoji('discipline', element.discipline)}</span> 
                     </div>
@@ -126,9 +127,24 @@ export function logTeamData() {
                 <div class='position'>Weight suggests: ${weightSuggestion(element.weight)}</div>
                 <div class='position'>Algorithm suggests: ${suggestedPos[0].position} (${suggestedPos[0].score.toFixed(1)}) or ${suggestedPos[1].position} : (${suggestedPos[1].score.toFixed(1)})</div>
                 <div class='physicals'>Exclusions: ${evaluatePlayerPosition(element.weight, element.height)}</div>
-                
             </div>`;
+            styleInjuryorSell(isDateInPast(element.injured), element.listed ,i)
     });
+
+    function styleInjuryorSell(injury_value, sell_value, index) {
+        const parentElement = document.querySelectorAll('.parent')[index]; // Selects the current parent element
+        if (injury_value) {
+            parentElement.classList.add('injured');
+        }
+        if (sell_value){
+            parentElement.classList.add('sell');
+        }
+        if (sell_value && injury_value){
+            parentElement.classList.add('sell-and-injured')
+            parentElement.classList.remove('sell')
+            parentElement.classList.remove('injured')
+        }
+    }
 
     const avg = globals.PLAYER_DATA.length;
     dataDisplayAvg.style.marginTop = '10px';
@@ -202,11 +218,12 @@ export function displayClubandManagerInfo() {
             <div>Registered: ${registerDate}</div>
             <div>Last Click: ${lastClick}</div>
         </div>`;
+    
 
     clubInfo.innerHTML = `
         <div class='card'>
             <div class="club-name-title">
-            Name: ${name} | <span class='physicals'>'${nickname_1}'
+            ${name}  <span class='physicals'>'${nickname_1}'
             <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/>
             </div>
             <hr/>
@@ -221,11 +238,51 @@ export function displayClubandManagerInfo() {
             <div>Regional: ${regional_rank}</div>
             <div>National: ${national_rank}</div>
             <div>World: ${world_rank}</div>
+        </div>
+        <div class='card'>
+        <div class="club-name-title">
+        <h2> Trophies </h2>
+        </div>
+        <hr>
+        <br>
+            ${cabinetBuilder()}
         </div>`;
+
+        
 
     settingsInfo.innerHTML = getSettingsInfo();
     setRanges();
 }
+
+function cabinetBuilder(){
+    if(globals.trophies){
+        let trophies = `<div class='cabinet'>`;
+  
+    function decodeHTMLEntities(str) {
+        // Create a temporary element to decode HTML entities
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = str;
+        return tempDiv.innerText || tempDiv.textContent;
+    }
+
+
+    globals.CLUB_DATA[0].trophies.forEach(element => {
+        let decodedLabel = decodeHTMLEntities(element.label)
+        // console.log(decodedLabel)
+        trophies += `<div class='trophy'><br/><img src='${element.image_url}' alt=''/> <br/><span class='physicals' style='font-size: x-small'>${decodedLabel}</div>` ;
+        
+    });
+
+    trophies += `</div>`
+    return trophies
+
+    }else{
+        return 'Not Yet';
+    }
+    
+    
+}
+
 
 function getPremiumInfoLink() {
     return 'Nope 😢 <a href="https://www.blackoutrugby.com/game/me.account.php#page=store" target="_blank" class="premium">upgrade</a>';
@@ -361,8 +418,8 @@ function formatDateString(date_string){
         day:'numeric',
         hour:'2-digit',
         minute:'2-digit',
-        second:'2-digit',
-        timeZoneName: 'short'
+        // second:'2-digit',
+        // timeZoneName: 'short'
     })
     return readableDate;
 }
@@ -372,3 +429,4 @@ function formatBankBalance(balance) {
         ? `<span class="form">$${Number(balance).toLocaleString()}</span>` 
         : `<span class="red">$${Number(balance).toLocaleString()}</span>`;
 }
+

@@ -108,8 +108,10 @@ export function getSettingsInfo() {
                 <span>(Version ${version})</span>
             </div>
             <div class='physicals'>
+                <div> TM Page ? </div>
+                <div> Trohpy Cabinet ✅ </div>
                 <div>Deploy Electron distributable</div>
-                <div> Electron window UI </div>
+                <div> Electron window UI ✅</div>
                 <div>Adjustable algorithm weights✅</div>
                 <div>Some positions are copies of others atm (halves, wing and FB)</div>
                 <div>Adjustable min weight and height exclusions</div>

@@ -93,7 +93,7 @@ input[type="text"] {
     padding: 1rem;
     margin-bottom: 0.5rem;
     width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.712);
     transition: all 0.3s ease-in-out;
     max-width: 1200px;
     margin-left: auto;
@@ -132,14 +132,43 @@ input[type="text"] {
     color: #64befa;
 }
 
+.blue{
+    color:#0d54ee;
+    /* top:10px; */
+    margin-bottom: 10px;
+}
 .red {
-    color: #860202;
+    color: var(--accent-color);
+}
+.injury{
+    margin-bottom: 10px;
 }
 
 .green {
     color: yellowgreen;
 }
 
+.injured{
+    border: 3px solid var(--accent-color);
+    box-shadow: inset 0 0 10px 0px var(--accent-color);
+}
+.sell{
+    border:3px solid #0d23ee;
+    box-shadow: inset 0 0 10px 0px #0d23ee;
+    
+}
+.sell-and-injured{
+    border-top:3px solid var(--accent-color);
+    border-right: 3px solid var(--accent-color);
+    border-left: 3px solid #0d23ee;
+    border-bottom: 3px solid #0d23ee;
+    box-shadow: 
+    inset 10px 0px 10px #0d23ee,   
+    inset -10px 0 10px var(--accent-color),  
+    inset 0 10px 10px var(--accent-color),   
+    inset 0 -10px 10px #0d23ee;
+
+}
 .nat-img {
     margin-left: 4px;
 }
@@ -195,3 +224,30 @@ input[type="text"] {
     background-color: yellowgreen;
 }
 
+
+.cabinet{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-end;
+
+}
+
+.trophy{
+    display: flex;
+    align-items: center;
+    background-color: #110e0e;
+    padding: 5px;
+    margin: 3px;
+    border: 2px solid var(--accent-color);
+    flex-direction: column;
+    border-radius: 3px;
+}
+
+.trophy img{
+    left: 50%;
+}
+.trophy:hover{
+    background-color: #444343;
+    padding: 7px;
+}

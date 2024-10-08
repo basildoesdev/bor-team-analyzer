@@ -9,15 +9,15 @@
 }
 
 .tab-btn {
-    flex: 1;
+    flex:1;
     padding: 10px;
-    background-color: #363636;
+    background-color: #0f0f0f;
     color: var(--main-text-color);
-    font-size: 1rem;
+    font-size: 0.9rem;
     border: none;
     border-bottom: 2px solid var(--accent-color);
     cursor: pointer;
-    /* transition: background-color 0.3s ease; */
+    transition: background-color 1s ease;
     /* min-width: 300px; */
 }
 
@@ -52,7 +52,7 @@
 }
 
 .tab-nav .tab-btn.active {
-    background-color: #535353;
+    background-color: #1b1b1b;
     color: #fff;
     border-right: 2px solid var(--accent-color);
     border-left: 2px solid var(--accent-color);
