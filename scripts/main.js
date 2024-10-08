@@ -85,7 +85,7 @@ window.addEventListener('load', function() {
     }
 });
 
-fetch('/.netlify/functions/getKey.js')
+fetch('/netlify/functions/getKey.js')
   .then(response => response.json())
   .then(data => {
     console.log(data.DEVKEY); // Access the key here
