@@ -113,7 +113,7 @@ export function getSettingsInfo() {
                 <div>Deploy Electron distributable</div>
                 <div> Electron window UI ✅</div>
                 <div>Adjustable algorithm weights✅</div>
-                <div>Some positions are copies of others atm (halves, wing and FB)</div>
+                <div>Some positions are copies of others atm (halves, wing and FB) ✅ fixed</div>
                 <div>Adjustable min weight and height exclusions</div>
                 <div>Min Prop Weight & Height ✅</div>
                 <div>Min Hooker Weight & Height ✅</div>
