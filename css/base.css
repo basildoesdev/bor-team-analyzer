@@ -3,11 +3,13 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Rowdies", sans-serif;
+    
 }
 
 *::-webkit-scrollbar {
-    width: 8px;
+    width: 1px;
     background-color: transparent;
+    display: none; /* Safari and Chrome */
 }
 
 *::-webkit-scrollbar-thumb {
@@ -25,7 +27,7 @@ body {
     align-items: center;
     background-color: #110e0e;
     background-image: radial-gradient(rgb(94, 93, 93),rgb(10, 10, 10));
-    
+    /* overflow: hidden; */
     color: var(--main-text-color);
     height: 100%;
 }

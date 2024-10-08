@@ -75,7 +75,7 @@ export function getSettingsInfo() {
     return `
         
         <div class='card'>
-            <h2>Algorithm Weight Adjustments</h2> <span><h3 id="refresh" class="refresh hide">↻ <small>Refresh</small> </h3></span>
+            <h2>Algorithm Weight Adjustments</h2> 
             <hr><br>
             <div>
                 Recomended that all totals for each position are the same to get fair and balanced results
@@ -84,13 +84,14 @@ export function getSettingsInfo() {
                 Refresh/reload to see updated suggestions on squad sheet
             </div>
             <br>
+            <span><h3 id="refresh" class="refresh hide">↻ <small> Save and Refresh </small>↻ </h3></span>
+        </div>        
+        ${positionSettingsHTML}
+        <div class='card'>
             <div  class='green default-weights'>
             <button onclick="resetSliders()" id='reload-defaults'>reload defaults</button>
             </div>
-
-        </div>        
-        ${positionSettingsHTML}
-
+        </div>
         <div class='card'>
             <div class='flex-align'>
                 <span>

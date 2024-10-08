@@ -1,7 +1,7 @@
 .title-bar {
     position: fixed;
     display: flex;
-    width: 99%;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
     background-color: #333;

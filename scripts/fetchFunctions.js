@@ -6,7 +6,7 @@ import { trimKey, badKeyDay } from "./keyFunctions.js";
 // import { DEVID, DEVKEY } from "./keys.js";
 
 async function fetchRugbyData(request_type, additionalParams = {}) {
-    const url = 'https://corsproxy.io/?https://classic-api.blackoutrugby.com/?d=1038';
+    const url = 'https://corsproxy.io/?https://classic-api.blackoutrugby.com/';
     const mailparams = {
         d: 1038,
         dk: '2yysSrd2fZxuOu5y',
