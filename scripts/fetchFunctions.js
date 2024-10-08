@@ -3,13 +3,13 @@ import { playerStatisticsHelper } from "./helpersFunctions.js";
 import { logClubData, logTeamData, displayClubandManagerInfo, sortPlayers } from "./uiFunctions.js";
 import { trimKey, badKeyDay } from "./keyFunctions.js";
 
-import { DEVID, DEVKEY } from "./keys.js";
+// import { DEVID, DEVKEY } from "./keys.js";
 
 async function fetchRugbyData(request_type, additionalParams = {}) {
     const url = 'https://corsproxy.io/?https://classic-api.blackoutrugby.com/?d=1038';
     const mailparams = {
-        d: DEVID,
-        dk: DEVKEY,
+        d: 1038,
+        dk: '2yysSrd2fZxuOu5y',
         r: request_type,
         m: globals._memberid,
         mk: globals._mainKey,

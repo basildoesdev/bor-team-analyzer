@@ -84,3 +84,10 @@ window.addEventListener('load', function() {
         document.getElementById('tab-2-btn').click(); // Click the default tab
     }
 });
+
+fetch('/.netlify/functions/getKey.js')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.DEVKEY); // Access the key here
+  })
+  .catch(error => console.error('Error fetching key:', error));
