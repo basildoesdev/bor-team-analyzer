@@ -127,10 +127,52 @@ export function logTeamData() {
                 <div class='position'>Weight suggests: ${weightSuggestion(element.weight)}</div>
                 <div class='position'>Algorithm suggests: ${suggestedPos[0].position} (${suggestedPos[0].score.toFixed(1)}) or ${suggestedPos[1].position} : (${suggestedPos[1].score.toFixed(1)})</div>
                 <div class='physicals'>Exclusions: ${evaluatePlayerPosition(element.weight, element.height)}</div>
-            </div>`;
+                <div class='stats-show hide-show-button hide'>Show Stats</div> 
+        <div class='stats-container hide'>${displayStats(i)}</div> 
+    </div>`;
             styleInjuryorSell(isDateInPast(element.injured), element.listed ,i)
     });
 
+
+    // Select all the .stats-show buttons
+let statsShowButtons = document.querySelectorAll('.stats-show');
+
+// Loop through each button and add a click event listener
+statsShowButtons.forEach((button, index) => {
+    button.addEventListener('click', function() {
+        // Toggle the visibility of the corresponding .stats-container
+        const statsContainer = button.nextElementSibling; // The next element is the .stats-container
+        statsContainer.classList.toggle('hide'); // Toggle the 'hides' class to show/hide stats
+
+        // Optionally, toggle the text of the button from "Show Stats" to "Hide Stats"
+        if (statsContainer.classList.contains('hide')) {
+            button.innerText = 'Show Stats';
+        } else {
+            button.innerText = 'Hide Stats';
+        }
+    });
+});
+
+
+      // Function to display statistics in the DOM
+    function displayStats(i) {
+    let stats = globals.PLAYER_STATISTICS_DATA[i];
+    // Create a div for stats
+    const statsContainer = document.createElement('div');
+    statsContainer.className = 'stats-container'; // Assign a class to the stats container
+
+    for (const key in stats) {
+        if (stats.hasOwnProperty(key)) {
+            const statDiv = document.createElement('div');
+            statDiv.classList.add('stat');
+            statDiv.innerHTML = `<span class="stat-label">${key.replace(/([A-Z])/g, ' $1')}: </span><span>${stats[key]}</span>`;
+            statsContainer.appendChild(statDiv);
+        }
+    }
+    return statsContainer.outerHTML; // Return the HTML string of the container
+}
+
+    
     function styleInjuryorSell(injury_value, sell_value, index) {
         const parentElement = document.querySelectorAll('.parent')[index]; // Selects the current parent element
         if (injury_value) {

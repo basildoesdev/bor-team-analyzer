@@ -173,6 +173,21 @@ input[type="text"] {
     margin-left: 4px;
 }
 
+.stat {
+    display: flex;
+    /* font-size: small; */
+    /* font-weight: 200; */
+    justify-content: space-between;
+    padding: 1px;
+    border-bottom: 1px solid #464545;
+}
+.stat:last-child {
+    border-bottom: none;
+}
+.stat-label {
+    font-weight: bold;
+}
+
 .container {
     display: flex;
     min-width: 90%;

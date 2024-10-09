@@ -101,8 +101,18 @@ export async function retrieveData(initcall) {
 }
 
 function devDataLogs() {
-    console.log('Player Data:', globals.PLAYER_DATA);
-    console.log('Club Data:', globals.CLUB_DATA);
+    
     console.log('Member Data:', globals.MEMBER_DATA);
+    console.log('Club Data:', globals.CLUB_DATA);
+    globals.PLAYER_DATA.sort((a, b) => {
+        return Number(a.id) - Number(b.id);
+      });
+    console.log('Player Data:', globals.PLAYER_DATA);
+    globals.PLAYER_DATA.sort((a, b) => {
+        return Number(a.playerid) - Number(b.playerid);
+      });
+    console.log('Player Statistics:', globals.PLAYER_STATISTICS_DATA);
+
+    
 }
 

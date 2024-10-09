@@ -110,6 +110,7 @@ export function getSettingsInfo() {
             </div>
             <div class='physicals'>
                 <div> TM Page ? </div>
+                <div> Player Stats</div>
                 <div> Trohpy Cabinet ✅ </div>
                 <div>Deploy Electron distributable</div>
                 <div> Electron window UI ✅</div>
