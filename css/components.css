@@ -88,7 +88,8 @@ input[type="text"] {
 }
 
 .card {
-    background-color: rgb(56, 56, 56);
+    background-color: rgb(41, 40, 40);
+    border: 1px solid #0c0a0a;
     border-radius: 5px;
     padding: 1rem;
     margin-bottom: 0.5rem;
@@ -98,7 +99,34 @@ input[type="text"] {
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
+    
 }
+
+.statistics {
+    margin-left: auto;
+    margin-right: auto;
+    height: 30px;
+    width: 30px;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"><path d="M12 5.5L8 9.5 4 5.5"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: center 12px center;
+    background-size: 30px;
+    transition: transform 0.5s ease; 
+    transform-style: preserve-3d;
+}
+
+.statistics:hover{
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="yellowgreen"><path d="M12 5.5L8 9.5 4 5.5"></path></svg>');
+    
+}
+
+.statistics.rotate {
+    /* transform: rotate(180deg);  */
+    transform: rotateX(180deg);
+}
+
+
 
 .csr {
     color: sandybrown;
@@ -169,23 +197,33 @@ input[type="text"] {
     inset 0 -10px 10px #0d23ee;
 
 }
-.nat-img {
-    margin-left: 4px;
+
+.hidden-stats {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    /* background-color: #f9f9f9; */
+    display: none; 
+    transition: all 0.3s ease; /* Smooth transition */
 }
 
-.stat {
-    display: flex;
-    /* font-size: small; */
-    /* font-weight: 200; */
-    justify-content: space-between;
-    padding: 1px;
-    border-bottom: 1px solid #464545;
+.show {
+    display: block; /* Class to show the stats */
+    opacity: 1;
+    animation: fadeIn 0.3s; /* Animation effect */
 }
-.stat:last-child {
-    border-bottom: none;
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
-.stat-label {
-    font-weight: bold;
+
+.nat-img {
+    margin-left: 4px;
 }
 
 .container {
@@ -213,7 +251,7 @@ input[type="text"] {
 }
 
 .hide-show-button{
-    /* display: none; */
+    /* display: block; */
     color:yellowgreen;
     cursor: pointer;
     font-size: 1.3rem;

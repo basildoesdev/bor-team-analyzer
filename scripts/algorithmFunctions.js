@@ -139,7 +139,8 @@ export function suggestedPosition(playerStats, weight, height) {
     }));
 
     scores.sort((a, b) => b.score - a.score);
-    return scores.slice(0, 2); 
+    // return scores.slice(0, 2);
+    return scores; 
 }
 
 export function weightSuggestion(weight) {

@@ -1,4 +1,4 @@
-export const version = '1.0.2';
+export const version = '1.0.3';
 export const versionTop = document.getElementById('version-title-dispaly');
 export const versionDisplay = document.getElementById('version');
 export const infoDisplay = document.getElementById('information');

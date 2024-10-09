@@ -110,7 +110,7 @@ export function logTeamData() {
             <div class='card parent'>
                 <div class='red injury'>${isDateInPast(element.injured) ? " ❗ Injured until: " + formatDateString(element.injured) + " ❗": " "} </div>
                 <div class='blue'>${element.listed ? "💲 Current Price: $" + Number(element.price).toLocaleString() + "  |  Deadline: " + formatDateString(element.listed) + " 💲": " "} </div>
-                <div class='child'>${i + 1}) <span class='name'>${element.name}</span><img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${element.nationality.toLowerCase()}.gif'/></span> 
+                <div class='child'><img src='https://www.blackoutrugby.com/images/trans.gif'/> <span class='name'>${element.name}</span><img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${element.nationality.toLowerCase()}.gif'/></span> 
                     | <span class='age'> ${element.age}.yo </span>
                     | <span class='form'>Form: ${element.form}</span> | <span class='energy'>Energy: ${globals.isPremium ? element.energy/10 : element.energy} </span>
                     | <span class='csr'> CSR: ${Number(element.csr).toLocaleString()}</span> | <span class='performance'>
@@ -118,59 +118,198 @@ export function logTeamData() {
                     <div>
                         <span class='physicals'>${element.weight}kg | ${element.height}cm | ${getEmoji('aggression', element.aggression)} | ${getEmoji('discipline', element.discipline)}</span> 
                     </div>
+                    <div class='position'>Weight suggests: ${weightSuggestion(element.weight)}</div>
                 </div>
                 <div class='skills'>
-                    Stamina: ${colorizeNumber(element.stamina)} | Handling: ${colorizeNumber(element.handling)} | Attack: ${colorizeNumber(element.attack)} 
-                    | Defense: ${colorizeNumber(element.defense)} | Technique: ${colorizeNumber(element.technique)} | Strength: ${colorizeNumber(element.strength)}
-                    | Jumping: ${colorizeNumber(element.jumping)} | Speed: ${colorizeNumber(element.speed)} | Agility: ${colorizeNumber(element.agility)} | Kicking: ${colorizeNumber(element.kicking)}
-                </div>
-                <div class='position'>Weight suggests: ${weightSuggestion(element.weight)}</div>
-                <div class='position'>Algorithm suggests: ${suggestedPos[0].position} (${suggestedPos[0].score.toFixed(1)}) or ${suggestedPos[1].position} : (${suggestedPos[1].score.toFixed(1)})</div>
+                    <div class='stats-container'>
+                        <div class='stats-category'>
+                            <h5>Suggestions</h5>
+                            <div class='stats-spacer'>
+                                <span>${suggestedPos[0].position} </span><span>${suggestedPos[0].score.toFixed(1)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>${suggestedPos[1].position} </span><span>${suggestedPos[1].score.toFixed(1)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>${suggestedPos[2].position} </span><span>${suggestedPos[2].score.toFixed(1)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>${suggestedPos[3].position} </span><span>${suggestedPos[3].score.toFixed(1)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>${suggestedPos[4].position} </span><span>${suggestedPos[4].score.toFixed(1)}</span>
+                            </div>
+                        </div>
+                        <div class='stats-category'>
+                        <h5><br></h5>
+                            <div class='stats-spacer'>
+                                <span>Stamina: </span> <span class="stat-value">${colorizeNumber(element.stamina)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>Attack: </span> <span class="stat-value">${colorizeNumber(element.attack)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>Technique: </span> <span class="stat-value">${colorizeNumber(element.technique)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>Jumping: </span> <span class="stat-value">${colorizeNumber(element.jumping)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>Agility:</span> <span class="stat-value">${colorizeNumber(element.agility)}</span>
+                            </div>
+                        </div>
+                        <div class='stats-category'>
+                        <h5><br></h5>
+                            <div class='stats-spacer'>
+                                <span>Handling: </span> <span class="stat-value">${colorizeNumber(element.handling)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>Defense: </span> <span class="stat-value">${colorizeNumber(element.defense)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>Strength: </span> <span class="stat-value">${colorizeNumber(element.strength)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>Speed: </span> <span class="stat-value">${colorizeNumber(element.speed)}</span>
+                            </div>
+                            <div class='stats-spacer'>
+                                <span>Kicking:</span> <span class="stat-value">${colorizeNumber(element.kicking)}</span>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+                
+
+                 
+
+
+                
+                
                 <div class='physicals'>Exclusions: ${evaluatePlayerPosition(element.weight, element.height)}</div>
-                <div class='stats-show hide-show-button hide'>Show Stats</div> 
-        <div class='stats-container hide'>${displayStats(i)}</div> 
-    </div>`;
+                <div id=${element.id} class='statistics'> </div>
+
+        </div>
+        
+        <div id="stats-${element.id}" class="hidden-stats card" style="display: none;">
+        <h4>Statistics for ${element.name}</h4>
+    
+        <div class="stats-container">
+            <div class="stats-category">
+                <h5>Caps</h5>
+                <div class='stats-spacer'>
+                    <span>League:</span> <span class="stat-value">${element.leaguecaps}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Cup:</span> <span class="stat-value">${element.cupcaps}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Friendly:</span> <span class="stat-value">${element.friendlycaps}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Under 20:</span> <span class="stat-value">${element.undertwentycaps}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>National:</span> <span class="stat-value">${element.nationalcaps}</span>
+                </div>
+            </div>
+
+            <div class="stats-category">
+                <h5>Points</h5>
+                <div class='stats-spacer'>
+                    <span>Tries:</span> <span class="stat-value">${element.tries}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Conversions:</span> <span class="stat-value">${element.conversions}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Penalties:</span> <span class="stat-value">${element.penalties}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Dropgoals:</span> <span class="stat-value">${element.dropgoals}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Total Points:</span> <span class="stat-value">${element.totalpoints}</span>
+                </div>
+            </div>
+
+            <div class="stats-category">
+                <h5>Attack</h5>
+                <div class='stats-spacer'>
+                    <span>Meters Gained:</span> <span class="stat-value">${element.metresgained}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Linebreaks:</span> <span class="stat-value">${element.linebreaks}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Intercepts:</span> <span class="stat-value">${element.intercepts}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Try Assists:</span> <span class="stat-value">${element.tryassists}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Beaten Defenders:</span> <span class="stat-value">${element.beatendefenders}</span>
+                </div>
+            </div>
+
+            <div class="stats-category">
+                <h5>Kicking</h5>
+                <div class='stats-spacer'>
+                    <span>Kicks: </span> <span class="stat-value">${element.kicks}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Good Kicks: </span> <span class="stat-value">${element.goodkicks}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Meters Kicked: </span> <span class="stat-value">${element.kickingmetres}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Avg Meters Kicked: </span> <span class="stat-value">${element.avkickingmetres}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Kickes out on full:</span> <span class="stat-value">${element.kicksoutonthefull}</span>
+                </div>
+                <div class='stats-spacer'>
+                    <span>Good U&U:</span> <span class="stat-value">${element.goodupandunders}</span>
+                </div>
+            </div>
+
+            </div>
+
+            
+        </div>
+    </div>`
+        
             styleInjuryorSell(isDateInPast(element.injured), element.listed ,i)
     });
 
+    const playerNames = document.querySelectorAll('.statistics');
 
-    // Select all the .stats-show buttons
-let statsShowButtons = document.querySelectorAll('.stats-show');
+    playerNames.forEach(name => {
+        name.addEventListener('click', function() {
+            const playerId = this.id; // Get the ID of the clicked player
+            const statsDiv = document.getElementById(`stats-${playerId}`); // Select the corresponding stats div
 
-// Loop through each button and add a click event listener
-statsShowButtons.forEach((button, index) => {
-    button.addEventListener('click', function() {
-        // Toggle the visibility of the corresponding .stats-container
-        const statsContainer = button.nextElementSibling; // The next element is the .stats-container
-        statsContainer.classList.toggle('hide'); // Toggle the 'hides' class to show/hide stats
-
-        // Optionally, toggle the text of the button from "Show Stats" to "Hide Stats"
-        if (statsContainer.classList.contains('hide')) {
-            button.innerText = 'Show Stats';
-        } else {
-            button.innerText = 'Hide Stats';
-        }
+            // Toggle the 'show' class
+            if (statsDiv.classList.contains('show')) {
+                statsDiv.classList.remove('show'); // Hide stats
+                statsDiv.style.display = 'none'; // Ensure it's hidden in the DOM
+            } else {
+                statsDiv.classList.add('show'); // Show stats
+                statsDiv.style.display = 'block'; // Show the stats in the DOM
+            }
+        });
     });
-});
 
+    // Select the statistics element
+    const statsElement = document.querySelector('.statistics');
 
-      // Function to display statistics in the DOM
-    function displayStats(i) {
-    let stats = globals.PLAYER_STATISTICS_DATA[i];
-    // Create a div for stats
-    const statsContainer = document.createElement('div');
-    statsContainer.className = 'stats-container'; // Assign a class to the stats container
+    // Add click event listener
+    statsElement.addEventListener('click', function() {
+        // Toggle the rotate class
+        this.classList.toggle('rotate');
+    });
 
-    for (const key in stats) {
-        if (stats.hasOwnProperty(key)) {
-            const statDiv = document.createElement('div');
-            statDiv.classList.add('stat');
-            statDiv.innerHTML = `<span class="stat-label">${key.replace(/([A-Z])/g, ' $1')}: </span><span>${stats[key]}</span>`;
-            statsContainer.appendChild(statDiv);
-        }
-    }
-    return statsContainer.outerHTML; // Return the HTML string of the container
-}
+    
 
     
     function styleInjuryorSell(injury_value, sell_value, index) {
@@ -245,7 +384,11 @@ export function sortPlayers() {
 
 export function displayClubandManagerInfo() {
     const { username, realname, email, dateregistered, lastclick, teams } = globals.MEMBER_DATA[0];
-    const { name, nickname_1, country_iso, bank_balance, ranking_points, prev_ranking_points, members, contentment, regional_rank, minor_sponsors, national_rank, total_salary, world_rank } = globals.CLUB_DATA[0];
+    const { name, nickname_1, country_iso, bank_balance, ranking_points, prev_ranking_points, members,
+         contentment, regional_rank, minor_sponsors, national_rank, total_salary, world_rank ,
+        stadium, stadium_capacity, stadium_corporate, stadium_covered, stadium_members, stadium_uncovered,
+        stadium_standing, prev_regional_rank, prev_national_rank, prev_world_rank, 
+        } = globals.CLUB_DATA[0];
 
     const formattedBalance = formatBankBalance(bank_balance);
     const registerDate = formatDateString(dateregistered), lastClick = formatDateString(lastclick);
@@ -265,26 +408,75 @@ export function displayClubandManagerInfo() {
     clubInfo.innerHTML = `
         <div class='card'>
             <div class="club-name-title">
-            ${name}  <span class='physicals'>'${nickname_1}'
-            <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/>
+                ${name}  <span class='physicals'>'${nickname_1}'
+                <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/>
             </div>
             <hr/>
             <br>
-            <div>Bank: ${formattedBalance}</div>
-            <div>Team Salaries: <span class='red'>$${Number(total_salary).toLocaleString()}</span></div>
-            <br>
-            <div>Members: ${members} | ${getEmoji('contentment', contentment)}</div>
-            <div>Sponsors: ${minor_sponsors}</div>
-            <br>
-            <div>Rankings: <span class='${getRankingClass(ranking_points, prev_ranking_points)}'>${ranking_points} ${ratingPointsMovement} | ${(ranking_points - prev_ranking_points).toFixed(4)}</span></div>
-            <div>Regional: ${regional_rank}</div>
-            <div>National: ${national_rank}</div>
-            <div>World: ${world_rank}</div>
+            <div class="stats-container">
+                <div class="stats-category">
+                    <h5>Finance</h5>
+                    <div class='stats-spacer-club'>
+                        <span>Bank: </span> <span class="">${formattedBalance}</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>Team Salaries: </span> <span class='red'>$${Number(total_salary).toLocaleString()}</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>Members: </span> <span class="">${members}</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span> Contentment: </span> <span class="">${getEmoji('contentment', contentment)}</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>Sponsors: </span> <span class="">${minor_sponsors}</span>
+                    </div>
+                </div>
+                <div class="stats-category">
+                    <h5>Rankings</h5>
+                    <div class='stats-spacer-club'>
+                        <span>Rating: </span> <span class='${getRankingClass(ranking_points, prev_ranking_points)}'>${ranking_points} ${ratingPointsMovement} </span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>Movement: </span> <span class=''>${(ranking_points - prev_ranking_points).toFixed(4)}</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>Regional: </span> <span class="">${regional_rank} (${prev_regional_rank - regional_rank})</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>National: </span> <span class="">${national_rank} (${prev_national_rank - national_rank})</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>World: </span> <span class="">${world_rank} (${prev_world_rank - world_rank})</span>
+                    </div>
+                </div>
+                <div class="stats-category">
+                    <h5>${stadium}</h5>
+                    <div class='stats-spacer-club'>
+                        <span>Capacity: </span> <span class="">${stadium_capacity}</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>Corporate: </span> <span class=''>${stadium_corporate}</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>Members: </span> <span class="">${stadium_members}</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>Covered: </span> <span class="">${stadium_covered}</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>Uncovered: </span> <span class="">${stadium_uncovered}</span>
+                    </div>
+                    <div class='stats-spacer-club'>
+                        <span>Standing: </span> <span class="">${stadium_standing}</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class='card'>
-        <div class="club-name-title">
-        <h2> Trophies </h2>
-        </div>
+            <div class="club-name-title">
+                <h2> Trophies </h2>
+            </div>
         <hr>
         <br>
             ${cabinetBuilder()}
@@ -471,4 +663,5 @@ function formatBankBalance(balance) {
         ? `<span class="form">$${Number(balance).toLocaleString()}</span>` 
         : `<span class="red">$${Number(balance).toLocaleString()}</span>`;
 }
+
 

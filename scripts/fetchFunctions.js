@@ -31,7 +31,7 @@ async function fetchRugbyData(request_type, additionalParams = {}) {
         if (data.status === 'Ok') {
             return data;  
         } else {
-            // throw new Error(data.error || 'Unknown error occurred');
+            throw new Error(data.error || 'Unknown error occurred');
         }
     } catch (error) {
         console.log('Error:', error);
@@ -78,15 +78,19 @@ export async function retrieveData(initcall) {
         
 
         const playerData = await fetchRugbyData('p', { teamid: globals._teamid });
-        globals.PLAYER_DATA = Object.values(playerData.players).sort((a, b) => b.csr - a.csr);
+        globals.PLAYER_DATA = Object.values(playerData.players);
 
         const playerStatisticsData = await fetchRugbyData('ps', { playerid: playerStatisticsHelper(globals.PLAYER_DATA) });
         globals.PLAYER_STATISTICS_DATA = Object.values(playerStatisticsData['player statistics']);
 
-        const lastFixtureData = await fetchRugbyData('f', { teamid: globals._teamid, last: 4 });
-        globals.CLUB_DATA[0].fixtures = Object.values(lastFixtureData.fixtures)
+        // const lastFixtureData = await fetchRugbyData('f', { teamid: globals._teamid, last: 4 });
+        // globals.CLUB_DATA[0].fixtures = Object.values(lastFixtureData.fixtures)
         // console.log(lastFixtureData);
         
+        // const tmData = await fetchRugbyData('tm', {sortby: 'price'})
+        // console.log(tmData)
+        
+        // console.log(account)
         devDataLogs();
         
         // UI update calls
@@ -102,17 +106,34 @@ export async function retrieveData(initcall) {
 
 function devDataLogs() {
     
-    console.log('Member Data:', globals.MEMBER_DATA);
-    console.log('Club Data:', globals.CLUB_DATA);
+    // console.log('Member Data:', globals.MEMBER_DATA);
+    // console.log('Club Data:', globals.CLUB_DATA);
     globals.PLAYER_DATA.sort((a, b) => {
         return Number(a.id) - Number(b.id);
       });
-    console.log('Player Data:', globals.PLAYER_DATA);
-    globals.PLAYER_DATA.sort((a, b) => {
+    // console.log('Player Data:', globals.PLAYER_DATA);
+    globals.PLAYER_STATISTICS_DATA.sort((a, b) => {
         return Number(a.playerid) - Number(b.playerid);
       });
-    console.log('Player Statistics:', globals.PLAYER_STATISTICS_DATA);
+    // console.log('Player Statistics:', globals.PLAYER_STATISTICS_DATA);
+    
+    if (globals.PLAYER_DATA.length === globals.PLAYER_STATISTICS_DATA.length) {
+        for (let i = 0; i < globals.PLAYER_DATA.length; i++) {
+            Object.assign(globals.PLAYER_DATA[i], globals.PLAYER_STATISTICS_DATA[i]);
+
+            // console.log(globals.PLAYER_DATA[i].id + " : " + globals.PLAYER_STATISTICS_DATA[i].playerid)
+            // if (Number(globals.PLAYER_DATA[i].id) - Number(globals.PLAYER_STATISTICS_DATA[i].playerid) != 0){
+            //     console.log('Not the same!')
+            // }else{
+            //     console.log('Same id :))')
+            // }
+            
+        }
+    }
+    // console.log(globals.PLAYER_DATA);
+    globals.PLAYER_DATA.sort((a, b) => b.csr - a.csr);
 
     
+    // console.log(globals.PLAYER_DATA);
 }
 

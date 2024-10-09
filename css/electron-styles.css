@@ -9,6 +9,7 @@
     padding: 10px;
     border-bottom: 2px solid red;
     -webkit-app-region: drag; /* Makes the title bar draggable */
+    z-index: 99;
 }
 
 .refresh{
