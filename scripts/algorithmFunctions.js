@@ -38,7 +38,7 @@ export let defaultPositionWeights = {
     'Fly Half': { 
         "Weight": 0, "Height": 0, "Stamina": 1, "Attack": 1.19, "Technique": 0.64, 
         "Jumping": 0, "Agility": 1.08, "Handling": 1.17, "Defense": 1.12, "Strength": 0.56, 
-        "Speed": 0.92, "Kicking": 1.33 },
+        "Speed": 0.92, "Kicking": 1.32 },
     'Center': { 
         "Weight": 0.35, "Height": 0, "Stamina": 1, "Attack": 1.29, "Technique": 0.6, 
         "Jumping": 0, "Agility": 1.17, "Handling": 1.2, "Defense": 1.33, "Strength": 0.8, 
