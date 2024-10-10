@@ -98,3 +98,16 @@ backToTopButton.onclick = () => {
     document.body.scrollTop = 0; 
     document.documentElement.scrollTop = 0; 
 };
+
+function isElectron() {
+    return typeof window !== 'undefined' && window.process && window.process.type === 'renderer';
+  }
+  
+  if (isElectron()) {
+    console.log("Running in Electron");
+  } else {
+    let buttons = document.getElementById('title-bar-contols')
+    buttons.style.display = 'none';
+    console.log("Running in a traditional browser");
+  }
+  

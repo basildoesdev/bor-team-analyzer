@@ -60,7 +60,7 @@ export function logTeamData() {
                         ${element.listed ? "💲 Current Price: $" + Number(element.price).toLocaleString()
                         + (element.bidteamname ? ' | Bidder : '+ element.bidteamname : ' | No Bids')  + " |  Deadline: " + formatDateString(element.listed) + " 💲": " "} 
                 </div>
-                <div class='child'><img src='https://www.blackoutrugby.com/images/trans.gif'/> <span class='name'>${element.name}</span><img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${element.nationality.toLowerCase()}.gif'/></span> 
+                <div class='child'> <span class='name'>${element.name}</span><img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${element.nationality.toLowerCase()}.gif'/></span> 
                     | <span class='age'> ${element.age}.yo </span>
                     | <span class='form'>Form: ${element.form}</span> | <span class='energy'>Energy: ${globals.isPremium ? element.energy/10 : element.energy} </span>
                     | <span class='csr'> CSR: ${Number(element.csr).toLocaleString()}</span> | <span class='performance'>
