@@ -86,27 +86,12 @@ input[type="text"] {
     margin-bottom: 5px;
 }
 
-/* .card {
-    background-color: rgb(41, 40, 40);
-    border: 1px solid #0c0a0a;
-    border-radius: 5px;
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.712);
-    transition: all 0.3s ease-in-out;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    
-} */
-
 .card {
     background-color: rgb(41, 40, 40);
     background-image: 
         linear-gradient(rgba(0, 0, 0, 0.3) 1px, transparent 1px),
         linear-gradient(90deg, rgba(2, 1, 1, 0.3) 1px, transparent 1px);
-    background-size: 3px 3px; /* size of each tiny box */
+    background-size: 3px 3px; 
     border: 1px solid #0c0a0a;
     border-radius: 5px;
     padding: 1rem;
