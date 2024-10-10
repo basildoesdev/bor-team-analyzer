@@ -1,68 +1,13 @@
-import { version, versionDisplay, 
-    infoContainer,
-    dataDisplay, dataDisplayAvg, 
-    sortListDiplay, tab1Name, tab2Name,tab3Name,tab4Name,
-    option1Name, option2Name, option3Name, option4Name,
-    managerInfo, clubInfo, settingsInfo, globals } from "./globalStore.js"; 
-
-import { retrieveData } from "./fetchFunctions.js";    
-import { normalizeValue, trimFirstLast } from "./helpersFunctions.js";
+// MOSTLY UPDATED 1.0.5
+import { Elements, globals } from "./globalStore.js"; 
+import { normalizeValue  } from "./helpersFunctions.js";
 import { suggestedPosition, weightSuggestion, calculatePerformance, evaluatePlayerPosition,  } from "./algorithmFunctions.js";
-
-// import { positionWeights } from "./algorithmFunctions.js";
 import { getSettingsInfo, setRanges, loadSavedPositionWeights } from "./settingsUiFunctions.js";
 
-export function logClubData() {
-    infoContainer.classList.remove('hide');
-    let gameDateDisplay = document.getElementById('game-date');
-    gameDateDisplay.innerHTML = `
-            Season: ${globals._globals.season}, Round: ${globals._globals.round}, Day: ${globals._globals.day}
-        `;
-    gameDateDisplay.classList.remove('hide');
-    
-
-    // versionDisplay.innerHTML = `<span><h4 class='physicals'>Version : ${version}</h4></span> <span><h3 id="refresh">↻ <small>Refresh</small> </h3></span>`
-    let refresh = document.getElementById('refresh');
-    refresh.classList.remove('hide');
-    
-    refresh.addEventListener('click', () => {
-        dataDisplay.innerHTML = '';
-        dataDisplayAvg.innerHTML = '';
-        loadSavedPositionWeights();
-        setRanges();
-        window.location.reload();
-        
-    });
-
-    const [{ username }] = globals.MEMBER_DATA;
-    const [{ name, country_iso }] = globals.CLUB_DATA;
-    const playersCount = globals.PLAYER_DATA.length;
-
-    const managerName = `<h3>Manager: ${username} ${globals.isPremium ? "⭐" : ""}</h3>`;
-    const clubName = `<h3>Club: ${name} <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/></h3>`;
-    const squadCount = `<h3>Squad (${playersCount})</h3>`;
-    const settingsLabel = `<h3>🔧 Settings</h3>`;
-
-    const applyContent = (element, content) => {
-        element.innerHTML = content;
-    };
-
-    applyContent(tab1Name, managerName);
-    applyContent(tab2Name, clubName);
-    applyContent(tab3Name, squadCount);
-    applyContent(tab4Name, settingsLabel);
-
-    applyContent(option1Name, managerName);
-    applyContent(option2Name, clubName);
-    applyContent(option3Name, squadCount);
-    applyContent(option4Name, settingsLabel);
-}
-
-
-
+ //#region // NEEDS OPTIMIZATION //
 export function logTeamData() {
-    dataDisplay.innerHTML = '';
-    dataDisplayAvg.innerHTML = '';
+    Elements.dataDisplay.innerHTML = '';
+    Elements.dataDisplayAvg.innerHTML = '';
     let totalFrom = 0, totalEnergy = 0, totalKG = 0, totalCM = 0, csr = 0, age = 0, agro = 0, disc = 0, injury = 0;
     let stam = 0, att = 0, tech = 0, jump = 0, agi = 0, hand = 0, def = 0, str = 0, spee = 0, kick = 0;
    
@@ -104,12 +49,17 @@ export function logTeamData() {
         let actual_weight = element.weight;
         let actual_height = element.height;
     
+        
         const suggestedPos = suggestedPosition(playerStats, actual_weight, actual_height);
         // console.log(element.name);
-        dataDisplay.innerHTML += `
+        // console.log(element.bidteamname);[24].bidteamname
+        Elements.dataDisplay.innerHTML += `
             <div class='card parent'>
                 <div class='red injury'>${isDateInPast(element.injured) ? " ❗ Injured until: " + formatDateString(element.injured) + " ❗": " "} </div>
-                <div class='blue'>${element.listed ? "💲 Current Price: $" + Number(element.price).toLocaleString() + "  |  Deadline: " + formatDateString(element.listed) + " 💲": " "} </div>
+                <div class='blue'>
+                        ${element.listed ? "💲 Current Price: $" + Number(element.price).toLocaleString()
+                        + (element.bidteamname ? ' | Bidder : '+ element.bidteamname : ' | No Bids')  + " |  Deadline: " + formatDateString(element.listed) + " 💲": " "} 
+                </div>
                 <div class='child'><img src='https://www.blackoutrugby.com/images/trans.gif'/> <span class='name'>${element.name}</span><img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${element.nationality.toLowerCase()}.gif'/></span> 
                     | <span class='age'> ${element.age}.yo </span>
                     | <span class='form'>Form: ${element.form}</span> | <span class='energy'>Energy: ${globals.isPremium ? element.energy/10 : element.energy} </span>
@@ -309,7 +259,6 @@ export function logTeamData() {
         this.classList.toggle('rotate');
     });
 
-    
 
     
     function styleInjuryorSell(injury_value, sell_value, index) {
@@ -328,8 +277,8 @@ export function logTeamData() {
     }
 
     const avg = globals.PLAYER_DATA.length;
-    dataDisplayAvg.style.marginTop = '10px';
-    dataDisplayAvg.innerHTML = `
+    Elements.dataDisplayAvg.style.marginTop = '10px';
+    Elements.dataDisplayAvg.innerHTML = `
         <div class='card' style='text-align:center;'>
             <div class="team-avg-title-text">Team Averages</div>
             <div><span class='age'> ${Math.floor(age / avg)}.yo</span> | <span class='form'>Form: ${Math.floor(totalFrom / avg)}</span> | <span class='energy'>Energy: ${globals.isPremium ? Math.floor((totalEnergy/10) / avg) : Math.floor((totalEnergy) / avg) } </span>
@@ -343,7 +292,7 @@ export function logTeamData() {
                 | Kicking: ${colorizeNumber(Math.floor(kick / avg))}</span>
         </div>`;
     
-        sortListDiplay.innerHTML = `<div class='card'>
+        Elements.sortListDisplay.innerHTML = `<div class='card'>
                 <select id="sortOption" class="sort-tab-dropdown" onchange="sortPlayers()">
                     <option value="name">Name</option>
                     <option value="csr" selected>CSR</option>
@@ -377,24 +326,71 @@ export function sortPlayers() {
         return 0;
     });
 
-    dataDisplay.innerHTML = '';
+    Elements.dataDisplay.innerHTML = '';
     logTeamData();
     document.getElementById("sortOption").value = sortBy;
+}
+//#endregion
+ 
+//#region // UPDATED TO 1.0.5 // 
+export function logClubData() {
+    Elements.infoContainer.classList.remove('hide');
+
+    // Display game date information
+    const gameDateDisplay = document.getElementById('game-date');
+    gameDateDisplay.innerHTML = `Season: ${globals._globals.season}, Round: ${globals._globals.round}, Day: ${globals._globals.day}`;
+    gameDateDisplay.classList.remove('hide');
+
+    // Set up refresh button
+    const refresh = document.getElementById('refresh');
+    refresh.classList.remove('hide');
+
+    refresh.addEventListener('click', () => {
+        Elements.dataDisplay.innerHTML = '';
+        Elements.dataDisplayAvg.innerHTML = '';
+        loadSavedPositionWeights();
+        setRanges();
+        window.location.reload();
+    });
+
+    // Extract relevant data from globals
+    const [{ username }] = globals.MEMBER_DATA;
+    const [{ name, country_iso }] = globals.CLUB_DATA;
+    const playersCount = globals.PLAYER_DATA.length;
+
+    // Construct the content to be displayed
+    const managerName = `<h3>Manager: ${username} ${globals.isPremium ? "⭐" : ""}</h3>`;
+    const clubName = `<h3>Club: ${name} <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/></h3>`;
+    const squadCount = `<h3>Squad (${playersCount})</h3>`;
+    const settingsLabel = `<h3>🔧 Settings</h3>`;
+
+    // Function to apply content to multiple elements
+    const applyContent = (elements, content) => {
+        elements.forEach(element => {
+            element.innerHTML = content;
+        });
+    };
+
+    // Update tab names and options with the same content
+    applyContent([Elements.tab1Name, Elements.option1Name], managerName);
+    applyContent([Elements.tab2Name, Elements.option2Name], clubName);
+    applyContent([Elements.tab3Name, Elements.option3Name], squadCount);
+    applyContent([Elements.tab4Name, Elements.option4Name], settingsLabel);
 }
 
 export function displayClubandManagerInfo() {
     const { username, realname, email, dateregistered, lastclick, teams } = globals.MEMBER_DATA[0];
     const { name, nickname_1, country_iso, bank_balance, ranking_points, prev_ranking_points, members,
-         contentment, regional_rank, minor_sponsors, national_rank, total_salary, world_rank ,
+        contentment, regional_rank, minor_sponsors, national_rank, total_salary, world_rank,
         stadium, stadium_capacity, stadium_corporate, stadium_covered, stadium_members, stadium_uncovered,
-        stadium_standing, prev_regional_rank, prev_national_rank, prev_world_rank, 
-        } = globals.CLUB_DATA[0];
+        stadium_standing, prev_regional_rank, prev_national_rank, prev_world_rank } = globals.CLUB_DATA[0];
 
     const formattedBalance = formatBankBalance(bank_balance);
-    const registerDate = formatDateString(dateregistered), lastClick = formatDateString(lastclick);
-    const ratingPointsMovement = ranking_points > prev_ranking_points ? "📈" : "📉";
+    const registerDate = formatDateString(dateregistered);
+    const lastClick = formatDateString(lastclick);
 
-    managerInfo.innerHTML = `
+    // Manager Info
+    Elements.managerInfo.innerHTML = `
         <div class='card'>
             <h3>Manager Information</h3>
             <div>Manager: ${username} | (${realname}) | Email: ${email}</div>
@@ -403,89 +399,100 @@ export function displayClubandManagerInfo() {
             <div>Registered: ${registerDate}</div>
             <div>Last Click: ${lastClick}</div>
         </div>`;
-    
 
-    clubInfo.innerHTML = `
+    // Club Info
+    Elements.clubInfo.innerHTML = `
         <div class='card'>
             <div class="club-name-title">
-                ${name}  <span class='physicals'>'${nickname_1}'
-                <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/>
+                ${name} <span class='physicals'>'${nickname_1}'
+                <img class='nat-img' src='https://www.blackoutrugby.com/images/flagz/${country_iso.toLowerCase()}.gif'/></span>
             </div>
-            <hr/>
-            <br>
+            <hr/><br/>
             <div class="stats-container">
-                <div class="stats-category">
-                    <h5>Finance</h5>
-                    <div class='stats-spacer-club'>
-                        <span>Bank: </span> <span class="">${formattedBalance}</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>Team Salaries: </span> <span class='red'>$${Number(total_salary).toLocaleString()}</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>Members: </span> <span class="">${members}</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span> Contentment: </span> <span class="">${getEmoji('contentment', contentment)}</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>Sponsors: </span> <span class="">${minor_sponsors}</span>
-                    </div>
-                </div>
-                <div class="stats-category">
-                    <h5>Rankings</h5>
-                    <div class='stats-spacer-club'>
-                        <span>Rating: </span> <span class='${getRankingClass(ranking_points, prev_ranking_points)}'>${ranking_points} ${ratingPointsMovement} </span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>Movement: </span> <span class=''>${(ranking_points - prev_ranking_points).toFixed(4)}</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>Regional: </span> <span class="">${regional_rank} (${prev_regional_rank - regional_rank})</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>National: </span> <span class="">${national_rank} (${prev_national_rank - national_rank})</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>World: </span> <span class="">${world_rank} (${prev_world_rank - world_rank})</span>
-                    </div>
-                </div>
-                <div class="stats-category">
-                    <h5>${stadium}</h5>
-                    <div class='stats-spacer-club'>
-                        <span>Capacity: </span> <span class="">${stadium_capacity}</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>Corporate: </span> <span class=''>${stadium_corporate}</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>Members: </span> <span class="">${stadium_members}</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>Covered: </span> <span class="">${stadium_covered}</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>Uncovered: </span> <span class="">${stadium_uncovered}</span>
-                    </div>
-                    <div class='stats-spacer-club'>
-                        <span>Standing: </span> <span class="">${stadium_standing}</span>
-                    </div>
-                </div>
+                ${generateStatsHTML(formattedBalance, members, contentment, minor_sponsors, total_salary, 
+                    ranking_points, prev_ranking_points, regional_rank, prev_regional_rank, national_rank, 
+                    prev_national_rank, world_rank, prev_world_rank, stadium, stadium_capacity, stadium_corporate, 
+                    stadium_members, stadium_covered, stadium_uncovered, stadium_standing)}
             </div>
         </div>
         <div class='card'>
             <div class="club-name-title">
-                <h2> Trophies </h2>
+                <h2>Trophies</h2>
             </div>
-        <hr>
-        <br>
+            <hr/><br/>
             ${cabinetBuilder()}
         </div>`;
 
-        
-
-    settingsInfo.innerHTML = getSettingsInfo();
+    Elements.settingsInfo.innerHTML = getSettingsInfo();
     setRanges();
+}
+
+// Generate Stats HTML to reduce redundancy in club info 1.0.5
+function generateStatsHTML(formattedBalance, members, contentment, minor_sponsors, total_salary, 
+    ranking_points, prev_ranking_points, regional_rank, prev_regional_rank, national_rank, 
+    prev_national_rank, world_rank, prev_world_rank, stadium, stadium_capacity, stadium_corporate, 
+    stadium_members, stadium_covered, stadium_uncovered, stadium_standing) {
+    
+    const ratingPointsMovement = ranking_points > prev_ranking_points ? "📈" : "📉";
+    
+    return `
+        <div class="stats-category">
+            <h5>Finance</h5>
+            <div class='stats-spacer-club'>
+                <span>Bank: </span><span>${formattedBalance}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Team Salaries: </span><span class='red'>$${Number(total_salary).toLocaleString()}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Members: </span><span>${members}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Contentment: </span><span>${getEmoji('contentment', contentment)}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Sponsors: </span><span>${minor_sponsors}</span>
+            </div>
+        </div>
+        <div class="stats-category">
+            <h5>Rankings</h5>
+            <div class='stats-spacer-club'>
+                <span>Rating: </span><span class='${getRankingClass(ranking_points, prev_ranking_points)}'>${ranking_points} ${ratingPointsMovement}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Movement: </span><span>${(ranking_points - prev_ranking_points).toFixed(4)}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Regional: </span><span>${regional_rank} (${prev_regional_rank - regional_rank})</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>National: </span><span>${national_rank} (${prev_national_rank - national_rank})</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>World: </span><span>${world_rank} (${prev_world_rank - world_rank})</span>
+            </div>
+        </div>
+        <div class="stats-category">
+            <h5>${stadium}</h5>
+            <div class='stats-spacer-club'>
+                <span>Capacity: </span><span>${stadium_capacity}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Corporate: </span><span>${stadium_corporate}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Members: </span><span>${stadium_members}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Covered: </span><span>${stadium_covered}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Uncovered: </span><span>${stadium_uncovered}</span>
+            </div>
+            <div class='stats-spacer-club'>
+                <span>Standing: </span><span>${stadium_standing}</span>
+            </div>
+        </div>`;
 }
 
 function cabinetBuilder(){
@@ -516,7 +523,6 @@ function cabinetBuilder(){
     
     
 }
-
 
 function getPremiumInfoLink() {
     return 'Nope 😢 <a href="https://www.blackoutrugby.com/game/me.account.php#page=store" target="_blank" class="premium">upgrade</a>';
@@ -664,4 +670,4 @@ function formatBankBalance(balance) {
         : `<span class="red">$${Number(balance).toLocaleString()}</span>`;
 }
 
-
+//#endregion

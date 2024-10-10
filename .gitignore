@@ -1,9 +1,12 @@
 node_modules/
+bor-team-analyzer-win32-x64/
+dist/
+out/
+*.json
+*.js
 index.js
 renderer.js
-*.js
 forge.config.js
 preload.js
 main.js
-out/
-bor-team-analyzer-win32-x64/
+pakage-lock.json

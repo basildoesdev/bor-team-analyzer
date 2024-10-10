@@ -1,11 +1,12 @@
-import { globals, submitBtn, accessKey, isSaveKey, keyValidDisplay, versionTop, version} from "./globalStore.js"; 
+// UPDATED TO 1.0.5 //
+
+import { Elements, globals } from "./globalStore.js"; 
 import { retrieveData } from "./fetchFunctions.js";
 import { sortPlayers } from "./uiFunctions.js";
 import { trimKey, checkSaveKeyInput, saveNewKeyandRefresh } from "./keyFunctions.js";
-import { resetSliders} from "./settingsUiFunctions.js";
+import { resetSliders, loadSavedPositionWeights } from "./settingsUiFunctions.js";
 
-// versionTop.innerHTML = ` Version  <span style='font-size:small;'>( ${version} )</span>`;
-
+// Global functions for event handlers
 window.showTab = showTab;
 window.showTabDropdown = showTabDropdown;
 window.checkKeyInput = checkKeyInput;
@@ -15,14 +16,17 @@ window.saveNewKeyandRefresh = saveNewKeyandRefresh;
 window.retrieveData = retrieveData;
 window.resetSliders = resetSliders;
 
-submitBtn.addEventListener('click', () => {
-    if (isSaveKey.checked) localStorage.setItem('key', accessKey.value);
+// Event listener for the submit button
+Elements.submitBtn.addEventListener('click', () => {
+    if (Elements.isSaveKey.checked) {
+        localStorage.setItem('key', Elements.accessKey.value);
+    }
 });
 
+
+// On window load, check for saved key and retrieve data if available
 window.onload = () => {
-    let savedKey = localStorage.getItem('key');
-    // loadSavedPositionWeights();
-    // setRanges();
+    const savedKey = localStorage.getItem('key');
     if (savedKey) {
         globals._mainKey = savedKey.slice(-40);
         retrieveData(true);
@@ -31,73 +35,66 @@ window.onload = () => {
 
 function checkKeyInput() {
     const isValidKey = /^m=(\d+)&mk=([a-fA-F0-9]{40})$/;
-    const fullKey = accessKey.value;
+    const fullKey = Elements.accessKey.value;
 
     if (isValidKey.test(fullKey)) {
         globals._mainKey = fullKey.slice(-40);
         globals._memberid = trimKey(fullKey);
-        accessKey.style.color = 'green';
-        submitBtn.style.backgroundColor = '#e73d3d';
-        submitBtn.disabled = false;
-        keyValidDisplay.innerHTML = '<p>Access Key:<span class="green"> (Valid Key Format) </span></p>';
+        Elements.accessKey.style.color = 'green';
+        Elements.submitBtn.style.backgroundColor = '#e73d3d';
+        Elements.submitBtn.disabled = false;
+        Elements.keyValidDisplay.innerHTML = '<p>Access Key:<span class="green"> (Valid Key Format) </span></p>';
     } else {
-        accessKey.style.color = 'red';
-        submitBtn.style.backgroundColor = '#a39999';
-        submitBtn.disabled = true;
-        keyValidDisplay.innerHTML = '<p>Access Key:<span class="red"> (Invalid Key Format) </span></p>';
+        Elements.accessKey.style.color = 'red';
+        Elements.submitBtn.style.backgroundColor = '#a39999';
+        Elements.submitBtn.disabled = true;
+        Elements.keyValidDisplay.innerHTML = '<p>Access Key:<span class="red"> (Invalid Key Format) </span></p>';
     }
 }
 
+// Show the selected tab and update the active tab button
 export function showTab(tabNumber) {
-    // Hide all tab contents
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => tab.classList.remove('active'));
-
-    // Show the selected tab content
     document.getElementById('tab' + tabNumber).classList.add('active');
 
-    // Optional: For buttons, also toggle active class
     const tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(btn => btn.classList.remove('active'));
     document.getElementById('tab-' + tabNumber + '-btn').classList.add('active');
 }
 
+// Show tab via dropdown
 export function showTabDropdown(tabNumber) {
     showTab(tabNumber); 
 }
 
+// Save the active tab to localStorage on click
 document.querySelectorAll('.tab-btn').forEach(tab => {
-    tab.addEventListener('click', function() {
-        const activeTabId = this.id; 
+    tab.addEventListener('click', () => {
+        const activeTabId = tab.id; 
         localStorage.setItem('activeTab', activeTabId); 
     });
 });
 
-window.addEventListener('load', function() {
+// Load saved tab on window load
+window.addEventListener('load', () => {
     const savedTabId = localStorage.getItem('activeTab'); 
-    if (savedTabId) {
-        document.getElementById(savedTabId).click(); 
-    } else {
-        document.getElementById('tab-2-btn').click();
-    }
+    const defaultTabId = 'tab-2-btn';
+    (savedTabId ? document.getElementById(savedTabId) : document.getElementById(defaultTabId)).click(); 
 });
 
+// Back to top button functionality
+const backToTopButton = document.getElementById("backToTop");
 
-let backToTopButton = document.getElementById("backToTop");
-
-
-window.onscroll = function() { scrollFunction() };
+window.onscroll = () => {
+    scrollFunction();
+};
 
 function scrollFunction() {
-  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    backToTopButton.style.display = "block";
-  } else {
-    backToTopButton.style.display = "none";
-  }
+    backToTopButton.style.display = (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) ? "block" : "none";
 }
 
-
-backToTopButton.onclick = function() {
-  document.body.scrollTop = 0; 
-  document.documentElement.scrollTop = 0; 
+backToTopButton.onclick = () => {
+    document.body.scrollTop = 0; 
+    document.documentElement.scrollTop = 0; 
 };

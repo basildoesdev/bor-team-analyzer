@@ -53,7 +53,6 @@ export let defaultPositionWeights = {
         "Speed": 1.29, "Kicking": 0.79 }
   };
   
-
 if (localStorage.getItem('positionWeights')){
     // console.log('applued logged weights')
     positionWeights = JSON.parse(localStorage.getItem('positionWeights'))

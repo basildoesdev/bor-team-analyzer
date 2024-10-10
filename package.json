@@ -1,16 +1,30 @@
 {
   "name": "bor-team-analyzer",
-  "version": "1.0.2",
-  "description": "[![Netlify Status](https://api.netlify.com/api/v1/badges/059c03a9-add5-41e9-9c40-9aec21ffc412/deploy-status)](https://app.netlify.com/sites/borteamanalyzer/deploys)",
+  "version": "1.0.5",
+  "description": "BoR Team Analyser",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
-  },
+    "start": "electron .",
+    "dist": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+    },
   "author": "Basil",
   "license": "ISC",
+  "build": {
+    "appId": "Basil-BorAnalyzer",
+    "win": {
+      "icon": "./assets/icons/leaf.png"
+    },
+    "mac": {
+      "icon": "./assets/icons/leaf.png"
+    },
+    "linux": {
+      "icon": "./assets/icons/leaf.png"
+    }
+  },
   "devDependencies": {
     "@electron-forge/cli": "^7.5.0",
     "@electron-forge/maker-deb": "^7.5.0",
@@ -21,6 +35,7 @@
     "@electron-forge/plugin-fuses": "^7.5.0",
     "@electron/fuses": "^1.8.0",
     "electron": "32.1.2",
+    "electron-builder": "^25.1.7",
     "electron-packager": "^17.1.2"
   },
   "dependencies": {

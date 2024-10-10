@@ -1,16 +1,19 @@
-import { globals, form, infoDisplay } from "./globalStore.js";
-import { playerStatisticsHelper } from "./helpersFunctions.js";
-import { logClubData, logTeamData, displayClubandManagerInfo, sortPlayers } from "./uiFunctions.js";
-import { trimKey, badKeyDay } from "./keyFunctions.js";
+// UPDATED TO 1.0.5 //
 
-// import { DEVID, DEVKEY } from "./keys.js";
+import { globals, Elements, } from "./globalStore.js";
+import { getPlayerIdsAsString } from "./helpersFunctions.js";
+import { logClubData, logTeamData, displayClubandManagerInfo } from "./uiFunctions.js";
+import { trimKey } from "./keyFunctions.js";
 
-async function fetchRugbyData(request_type, additionalParams = {}) {
-    const url = 'https://corsproxy.io/?https://classic-api.blackoutrugby.com/';
-    const mailparams = {
+// API URL
+const API_URL = 'https://corsproxy.io/?https://classic-api.blackoutrugby.com/';
+
+// Fetch Rugby Data
+export async function fetchRugbyData(requestType, additionalParams = {}) {
+    const mailParams = {
         d: 1038,
         dk: '2yysSrd2fZxuOu5y',
-        r: request_type,
+        r: requestType,
         m: globals._memberid,
         mk: globals._mainKey,
         json: 1,
@@ -18,122 +21,105 @@ async function fetchRugbyData(request_type, additionalParams = {}) {
     };
 
     try {
-        const response = await fetch(url, {
+        const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Accept': 'application/json',
             },
-            body: new URLSearchParams(mailparams)
+            body: new URLSearchParams(mailParams)
         });
         const data = await response.json();
-        
-        if (data.status === 'Ok') {
+
+        if (data.status.trim() === 'Ok') {
             return data;  
         } else {
-            throw new Error(data.error || 'Unknown error occurred');
+            // throw new Error(data.error || 'Unknown error occurred');
         }
     } catch (error) {
-        console.log('Error:', error);
-        // badKeyDay();
-        return data
         throw error;  
     }
 }
 
-export async function retrieveData(initcall) {
-    if (initcall) {
+// Retrieve Data
+export async function retrieveData(initCall) {
+    if (initCall) {
         let memberKey = localStorage.getItem('key');
         globals._memberid = trimKey(memberKey);
         globals._mainKey = memberKey.slice(-40);
     }
 
-    form.style.display = 'none';
-    infoDisplay.classList.remove('hide')
+    Elements.form.style.display = 'none';
+    Elements.infoDisplay.classList.remove('hide');
 
     try {
         const memberData = await fetchRugbyData('m', { memberid: globals._memberid });
         globals.MEMBER_DATA = Object.values(memberData.members);
         globals._teamid = globals.MEMBER_DATA[0].teamid;
 
+        // Set global game information
         globals._globals = {
             day: memberData.gameDate.day,
             round: memberData.gameDate.round,
             season: memberData.gameDate.season
         };
-        
-        globals.MEMBER_DATA[0].premium == '1' ? globals.isPremium = true : globals.isPremium = false;
 
+        globals.isPremium = globals.MEMBER_DATA[0].premium === '1';
+
+        // Fetch club and trophy data
         const clubData = await fetchRugbyData('t', { teamid: globals._teamid });
         globals.CLUB_DATA = Object.values(clubData.teams);
 
-        const clubTrophyData = await fetchRugbyData('trph', {teamid: globals._teamid})
-        if(clubTrophyData != undefined){
-            globals.CLUB_DATA[0].trophies = Object.values(clubTrophyData.trophies);
-            globals.trophies = true;
-        }else{
-            console.log('no trophies');
-            globals.trophies = false;
-        }
-        
+        const clubTrophyData = await fetchRugbyData('trph', { teamid: globals._teamid });
+        globals.CLUB_DATA[0].trophies = clubTrophyData ? Object.values(clubTrophyData.trophies) : [];
+        globals.trophies = !!clubTrophyData;
 
+        // Fetch player data
         const playerData = await fetchRugbyData('p', { teamid: globals._teamid });
         globals.PLAYER_DATA = Object.values(playerData.players);
 
-        const playerStatisticsData = await fetchRugbyData('ps', { playerid: playerStatisticsHelper(globals.PLAYER_DATA) });
+        // Fetch player statistics
+        const playerStatisticsData = await fetchRugbyData('ps', { playerid: getPlayerIdsAsString(globals.PLAYER_DATA) });
         globals.PLAYER_STATISTICS_DATA = Object.values(playerStatisticsData['player statistics']);
 
-        // const lastFixtureData = await fetchRugbyData('f', { teamid: globals._teamid, last: 4 });
-        // globals.CLUB_DATA[0].fixtures = Object.values(lastFixtureData.fixtures)
-        // console.log(lastFixtureData);
-        
-        // const tmData = await fetchRugbyData('tm', {sortby: 'price'})
-        // console.log(tmData)
-        
-        // console.log(account)
-        devDataLogs();
-        
-        // UI update calls
-        logTeamData();
-        displayClubandManagerInfo();
-        logClubData();
+        processData();
 
-        infoDisplay.classList.add('hide');
+        // Update UI
+        Elements.infoDisplay.classList.add('hide');
     } catch (error) {
         console.error('Error during fetch operations:', error);
     }
 }
 
-function devDataLogs() {
-    
-    // console.log('Member Data:', globals.MEMBER_DATA);
-    // console.log('Club Data:', globals.CLUB_DATA);
-    globals.PLAYER_DATA.sort((a, b) => {
-        return Number(a.id) - Number(b.id);
-      });
-    // console.log('Player Data:', globals.PLAYER_DATA);
-    globals.PLAYER_STATISTICS_DATA.sort((a, b) => {
-        return Number(a.playerid) - Number(b.playerid);
-      });
-    // console.log('Player Statistics:', globals.PLAYER_STATISTICS_DATA);
-    
+// Process Data
+async function processData() {
+    // Sort player and statistics data
+    globals.PLAYER_DATA.sort((a, b) => Number(a.id) - Number(b.id));
+    globals.PLAYER_STATISTICS_DATA.sort((a, b) => Number(a.playerid) - Number(b.playerid));
+
+    // Merge player and statistics data
     if (globals.PLAYER_DATA.length === globals.PLAYER_STATISTICS_DATA.length) {
         for (let i = 0; i < globals.PLAYER_DATA.length; i++) {
             Object.assign(globals.PLAYER_DATA[i], globals.PLAYER_STATISTICS_DATA[i]);
 
-            // console.log(globals.PLAYER_DATA[i].id + " : " + globals.PLAYER_STATISTICS_DATA[i].playerid)
-            // if (Number(globals.PLAYER_DATA[i].id) - Number(globals.PLAYER_STATISTICS_DATA[i].playerid) != 0){
-            //     console.log('Not the same!')
-            // }else{
-            //     console.log('Same id :))')
-            // }
-            
+            // Fetch bidding team name if exists
+            if (globals.PLAYER_DATA[i].bidteamid) {
+                try {
+                    let team = await fetchRugbyData('t', { teamid: globals.PLAYER_DATA[i].bidteamid });
+                    globals.PLAYER_DATA[i].bidteamname = team.teams[globals.PLAYER_DATA[i].bidteamid]?.name || 'Error fetching team';
+                } catch (error) {
+                    console.error(`Error fetching team for player ${globals.PLAYER_DATA[i].name}`, error);
+                    globals.PLAYER_DATA[i].bidteamname = 'Error fetching team';
+                }
+            }
         }
     }
-    // console.log(globals.PLAYER_DATA);
+
     globals.PLAYER_DATA.sort((a, b) => b.csr - a.csr);
 
-    
-    // console.log(globals.PLAYER_DATA);
-}
+    console.log(globals.PLAYER_DATA);
 
+    logTeamData();
+    displayClubandManagerInfo();
+    logClubData();
+}

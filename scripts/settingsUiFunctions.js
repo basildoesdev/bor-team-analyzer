@@ -1,7 +1,6 @@
 import {positionWeights, defaultPositionWeights} from "./algorithmFunctions.js";
 import { version, globals } from "./globalStore.js";
 
-
 let positionData = {};
 
 // Generate HTML for settings
@@ -110,10 +109,10 @@ export function getSettingsInfo() {
             </div>
             <div class='physicals'>
                 <div> TM Page ? </div>
-                <div> Player Stats</div>
-                <div> Trohpy Cabinet ✅ </div>
+                <div>Player Stats</div>
+                <div>Trohpy Cabinet ✅ </div>
                 <div>Deploy Electron distributable</div>
-                <div> Electron window UI ✅</div>
+                <div>Electron window UI ✅</div>
                 <div>Adjustable algorithm weights✅</div>
                 <div>Some positions are copies of others atm (halves, wing and FB) ✅ fixed</div>
                 <div>Adjustable min weight and height exclusions</div>
@@ -131,17 +130,19 @@ export function getSettingsInfo() {
     `;
 }
 
+// LOGIC SECTION //
+
 // Calculate total for a position
 function calculateTotal(position) {
     if (!positionData[position]) return 0;
-    return '( ' + positionData[position].sliders.reduce((sum, slider) => sum + parseFloat(slider.value), 0).toFixed(2) + ' ) ';
+    const total = positionData[position].sliders.reduce((sum, slider) => sum + parseFloat(slider.value), 0).toFixed(2);
+    return `(${total})`;
 }
 
 // Set up the sliders and their behaviors
 export function setRanges() {
     const inputs = document.querySelectorAll('.restricted-input');
     const hideShows = document.querySelectorAll('.hide-show-button');
-
 
     inputs.forEach(input => {
         const position = input.id.split('-')[0];
@@ -163,7 +164,6 @@ export function setRanges() {
             displayElement.textContent = this.value; // Update display
             updateTotal(position); // Update the total score for the position
             updatePositionWeights(position); // Update the positionWeights object
-            // console.log(`Slider changed for ${position}. Saving new weights...`);
         });
         
     });
@@ -181,7 +181,8 @@ export function setRanges() {
             }
         });
     });
-    
+
+    resetSliders(); // Call resetSliders after setting up the sliders
 }
 
 // Update the total score display for a position
@@ -192,7 +193,7 @@ function updateTotal(position) {
 
 // Update positionWeights based on the current slider values
 function updatePositionWeights(position) {
-    const sliders = positionData[position].sliders;
+    const sliders = positionData[position]?.sliders;
 
     if (!sliders || sliders.length === 0) {
         console.warn(`No sliders found for position: ${position}`);
@@ -200,52 +201,32 @@ function updatePositionWeights(position) {
     }
 
     // Update the positionWeights object with the current slider values
-    positionWeights[position].Weight = parseFloat(sliders[0].value);
-    positionWeights[position].Height = parseFloat(sliders[1].value);
-    positionWeights[position].Stamina = parseFloat(sliders[2].value);
-    positionWeights[position].Attack = parseFloat(sliders[3].value);
-    positionWeights[position].Technique = parseFloat(sliders[4].value);
-    positionWeights[position].Jumping = parseFloat(sliders[5].value);
-    positionWeights[position].Agility = parseFloat(sliders[6].value);
-    positionWeights[position].Handling = parseFloat(sliders[7].value);
-    positionWeights[position].Defense = parseFloat(sliders[8].value);
-    positionWeights[position].Strength = parseFloat(sliders[9].value);
-    positionWeights[position].Speed = parseFloat(sliders[10].value);
-    positionWeights[position].Kicking = parseFloat(sliders[11].value);
+    const attributes = ['Weight', 'Height', 'Stamina', 'Attack', 'Technique', 'Jumping', 'Agility', 'Handling', 'Defense', 'Strength', 'Speed', 'Kicking'];
+    attributes.forEach((attr, index) => {
+        positionWeights[position][attr] = parseFloat(sliders[index].value);
+    });
 
     savePositionWeights();
 }
 
+// Save positionWeights to localStorage
 function savePositionWeights() {
-    // console.log("Saving positionWeights to localStorage:", positionWeights);
     localStorage.setItem('positionWeights', JSON.stringify(positionWeights));
 }
 
+// Load saved position weights from localStorage
 export function loadSavedPositionWeights() {
     const savedWeights = localStorage.getItem('positionWeights');
     if (savedWeights) {
-        // Parse the stored string back to an object
         const loadedWeights = JSON.parse(savedWeights);
 
-        // Iterate over all positions and apply the saved values
         Object.keys(loadedWeights).forEach(position => {
             const sliders = positionData[position]?.sliders;
             if (sliders) {
-                sliders[0].value = loadedWeights[position].Weight;
-                sliders[1].value = loadedWeights[position].Height;
-                sliders[2].value = loadedWeights[position].Stamina;
-                sliders[3].value = loadedWeights[position].Attack;
-                sliders[4].value = loadedWeights[position].Technique;
-                sliders[5].value = loadedWeights[position].Jumping;
-                sliders[6].value = loadedWeights[position].Agility;
-                sliders[7].value = loadedWeights[position].Handling;
-                sliders[8].value = loadedWeights[position].Defense;
-                sliders[9].value = loadedWeights[position].Strength;
-                sliders[10].value = loadedWeights[position].Speed;
-                sliders[11].value = loadedWeights[position].Kicking;
-
-                // Update the display values for each slider
-                updateSliderDisplay(position);
+                sliders.forEach((slider, index) => {
+                    slider.value = loadedWeights[position][Object.keys(loadedWeights[position])[index]];
+                    updateSliderAndDisplay(position, slider);
+                });
             }
         });
 
@@ -254,37 +235,24 @@ export function loadSavedPositionWeights() {
     }
 }
 
-function updateSliderDisplay(position) {
-    const sliders = positionData[position].sliders;
-
-    // Update each slider's display text
-    document.getElementById(`${position}-weightDisplay`).textContent = sliders[0].value;
-    document.getElementById(`${position}-heightDisplay`).textContent = sliders[1].value;
-    document.getElementById(`${position}-staminaDisplay`).textContent = sliders[2].value;
-    document.getElementById(`${position}-attackDisplay`).textContent = sliders[3].value;
-    document.getElementById(`${position}-techniqueDisplay`).textContent = sliders[4].value;
-    document.getElementById(`${position}-jumpingDisplay`).textContent = sliders[5].value;
-    document.getElementById(`${position}-agilityDisplay`).textContent = sliders[6].value;
-    document.getElementById(`${position}-handlingDisplay`).textContent = sliders[7].value;
-    document.getElementById(`${position}-defenseDisplay`).textContent = sliders[8].value;
-    document.getElementById(`${position}-strengthDisplay`).textContent = sliders[9].value;
-    document.getElementById(`${position}-speedDisplay`).textContent = sliders[10].value;
-    document.getElementById(`${position}-kickingDisplay`).textContent = sliders[11].value;
-
-    // Update the total score
-    updateTotal(position);
+// Update each slider's display text
+function updateSliderAndDisplay(position, slider) {
+    const attribute = slider.id.split('-')[1].charAt(0).toUpperCase() + slider.id.split('-')[1].slice(1); // Convert to camel case
+    const displayElement = document.getElementById(`${position}-${attribute.toLowerCase()}Display`);
+    if (displayElement) {
+        displayElement.textContent = slider.value;
+    }
+    updateTotal(position); // Update the total score
 }
 
 export function resetSliders() {
-    // Loop through each position in positionWeights
     Object.keys(positionWeights).forEach(position => {
         // Reset to defaultPositionWeights for each position
         positionWeights[position] = { ...defaultPositionWeights[position] };
-        
+
         // Update the sliders and display values in the DOM for each attribute of the position
         Object.keys(positionWeights[position]).forEach(attribute => {
             const slider = document.getElementById(`${position}-${attribute.toLowerCase()}`);
-            
             if (slider) {
                 // Update the slider's value to the default value
                 slider.value = positionWeights[position][attribute];

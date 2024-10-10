@@ -2,15 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"/>
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"/> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title optimized for SEO with relevant keywords -->
+    <title>Basil Dev Studios | Blackout Rugby Team Analyzer Tool</title>
+    
+    <!-- Meta description to describe your page for search engines -->
+    <meta name="description" content="Basil Dev Studios offers an advanced team analyzer tool for Blackout Rugby. Access player data, analyze performance and positional ratings.">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://borteamanalyser.netlify.app/">
+
+    <!-- Favicon for branding -->
     <link rel="icon" href="./assets/icons/leaf.png" type="image/x-icon">
-    <title id="team1">Basil | BoR Team Analyzer</title>
+
+    <!-- Open Graph meta tags for social media optimization -->
+    <meta property="og:title" content="Basil Dev Studios | Blackout Rugby Team Analyzer Tool">
+    <meta property="og:description" content="Analyze your Blackout Rugby team with our tool for better lineup choices.">
+    <meta property="og:image" content="https://borteamanalyser.netlify.app/assets/images/team-analyzer-preview.png">
+    <meta property="og:url" content="https://borteamanalyser.netlify.app/">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card for better sharing -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Basil Dev Studios | Blackout Rugby Team Analyzer">
+    <meta name="twitter:description" content="Analyze your Blackout Rugby team with our tool for better lineup choices.">
+    <meta name="twitter:image" content="https://borteamanalyser.netlify.app/assets/images/team-analyzer-preview.png">
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
@@ -24,78 +42,77 @@
 <body>
     <div class="title-bar">
         <div>
-            <p id="title">BoR Team Analyser   <span class="physicals" id="version-title-dispaly"></span></p>
+            <!-- Added an H1 for main title, important for SEO -->
+            <p id="title">BoR Team Analyzer <span class="physicals" id="version-title-display"></span></p>
         </div>
-        <div id="game-date" class="hide game-date">
-        </div>
-        
+        <div id="game-date" class="hide game-date"></div>
         
         <div class="title-bar-controls">
-            <button id="minimize"></button>
-            <button id="maximize"></button>
-            <button id="close"></button>
+            <button id="minimize" aria-label="Minimize"></button>
+            <button id="maximize" aria-label="Maximize"></button>
+            <button id="close" aria-label="Close"></button>
         </div>
-        
     </div>
+
     <div id="team-analyzer-form">
-        <h2 class="app-title"> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer</h2>
+        <!-- Using more SEO-friendly heading levels -->
+        <h2 class="app-title"><a href="https://www.blackoutrugby.com/" target="_blank" rel="noopener noreferrer">BoR</a> Team Analyzer</h2>
+        
         <div class="input-container">
             <label id="key-valid-display" for="access-key">Access Key:</label>
             <input type="text" id="access-key" name="access-key" placeholder="🗝️" oninput="checkKeyInput()" required>
         </div>
+        
         <div class="input-container">
-            <p class="key-info">* find this on your account page > <a href="https://www.blackoutrugby.com/game/me.account.php#page=account" target="_blank">here</a></p>
+            <p class="key-info">* Find this on your account page: <a href="https://www.blackoutrugby.com/game/me.account.php#page=account" target="_blank" rel="noopener noreferrer">here</a></p>
         </div>
+
         <div class="input-container">
-            <label>
-                <input type="checkbox" id="save-key" name="save-key"> Save key to localstore
-            </label>
+            <label><input type="checkbox" id="save-key" name="save-key"> Save key to local storage</label>
         </div>
         <button id="submit" onclick="retrieveData()">Submit</button>
     </div>
-    <p id="information" class="loader hide"></p>
-    <div id="info-container" class="container hide">
-        
-        <!-- <div id="version"></div>
-        <h2 class="app-title"> <a href="https://www.blackoutrugby.com/" target="_blank">BoR</a> Team Analyzer: </h2> -->
-        <!-- <div id="game-date" style="text-align:center;"></div> -->
 
+    <p id="information" class="loader hide"></p>
+    
+    <div id="info-container" class="container hide">
         <nav class="tab-nav">
-            <button id="tab-1-btn" class="tab-btn" onclick="showTab(1)">Tab 1</button>
-            <button id="tab-2-btn" class="tab-btn active" onclick="showTab(2)">Tab 2</button>
-            <button id="tab-3-btn" class="tab-btn" onclick="showTab(3)">Tab 3</button>
-            <button id="tab-4-btn" class="tab-btn" onclick="showTab(4)">Tab 4</button>
-            
+            <button id="tab-1-btn" class="tab-btn" onclick="showTab(1)">Manager Info</button>
+            <button id="tab-2-btn" class="tab-btn active" onclick="showTab(2)">Club Info</button>
+            <button id="tab-3-btn" class="tab-btn" onclick="showTab(3)">Team Averages</button>
+            <button id="tab-4-btn" class="tab-btn" onclick="showTab(4)">Settings</button>
         </nav>
-        <!-- Dropdown for smaller screens -->
+
         <select id="tab-dropdown" class="tab-dropdown" onchange="showTabDropdown(this.value)">
-            <option id="option1" value="1">Tab 1</option>
-            <option id="option2" value="2">Tab 2</option>
-            <option id="option3" value="3">Tab 3</option>
-            <option id="option4" value="4">Tab 4</option>
-            
+            <option id="option1" value="1">Manager Info</option>
+            <option id="option2" value="2">Club Info</option>
+            <option id="option3" value="3">Team Averages</option>
+            <option id="option4" value="4">Settings</option>
         </select>
 
         <div id="tab1" class="tab-content">
-            <p id="manager-infos"></p>
+            <p id="manager-infos">Details about the manager will be displayed here.</p>
         </div>
+
         <div id="tab2" class="tab-content active">
-            <p id="club-infos"></p>
+            <p id="club-infos">Details about the club will be displayed here.</p>
         </div>
+
         <div id="tab3" class="tab-content">
-            <p id="averages"></p>
+            <p id="averages">Team averages and stats will be displayed here.</p>
             <nav id="sort-list-display"></nav>
-            <p id="player-card-container"></p>
+            <p id="player-card-container">Player card information will be displayed here.</p>
         </div>
-       
+
         <div id="tab4" class="tab-content">
-            <p id="settings-infos"></p>
+            <p id="settings-infos">Settings and options for the tool will be displayed here.</p>
         </div>
-        
     </div>
+    
     <button id="backToTop" title="Go to top">Top</button>
 
+    <!-- Scripts -->
+    <script type="module" src="scripts/main.js"></script>
+    <script type="module" src="renderer.js"></script>
 </body>
-<script type="module" src="scripts/main.js"></script>
-<script type="module" src="renderer.js"></script>
 </html>
